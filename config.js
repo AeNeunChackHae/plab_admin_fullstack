@@ -101,4 +101,8 @@ export const config = {
   board_chat: {
     board_tag_code: getEnvValue("BOARD_TAG_CODE"),
   },
+  admin_account: {
+    account: getEnvValue("ADMIN_ACCOUNT"),
+    password: getEnvValue("ADMIN_PASSWORD"),
+  },
 };
