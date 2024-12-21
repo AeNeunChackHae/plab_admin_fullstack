@@ -1,6 +1,7 @@
 import express from "express";
 import stadiumRouter from "./router/stadium.js";
 import rootRouter from "./router/root.js";
+import authRouter from "./router/auth.js";
 import cors from "cors";
 import path from "path";
 
@@ -32,6 +33,7 @@ app.set("views", path.join(process.cwd(), "template"));
 // Router 설정
 app.use("/", rootRouter);
 app.use("/stadium", stadiumRouter);
+app.use("/auth", authRouter);
 
 // 404 error page
 app.use((req, res, next) => {
