@@ -19,10 +19,10 @@ export const config = {
     db_database: getEnvValue("DB_DATABASE"),
   },
   aws: {
-    aws_bucket_name: getEnvValue("AWS_BUCKET_NAME"),
-    aws_bucket_region: getEnvValue("AWS_BUCKET_REGION"),
-    aws_access_key: getEnvValue("AWS_ACCESS_KEY"),
-    aws_secret_key: getEnvValue("AWS_SECRET_KEY"),
+    bucket_name: getEnvValue("AWS_BUCKET_NAME"),
+    bucket_region: getEnvValue("AWS_BUCKET_REGION"),
+    access_key: getEnvValue("AWS_ACCESS_KEY"),
+    secret_key: getEnvValue("AWS_SECRET_KEY"),
   },
   mypage: {
     play_style_code: getEnvValue("PLAY_STYLE_CODE"),
