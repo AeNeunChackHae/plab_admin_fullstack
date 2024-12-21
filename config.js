@@ -10,7 +10,7 @@ function getEnvValue(key) {
   return value;
 }
 
-const config = {
+export const config = {
   db: {
     db_host: getEnvValue("DB_HOST"),
     db_port: getEnvValue("DB_PORT"),
