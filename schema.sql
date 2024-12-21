@@ -1,0 +1,359 @@
+show databases;
+
+USE anch;
+show tables;
+
+CREATE TABLE PFB_USER (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 사용자 ID, 자동 증가
+    phone_number VARCHAR(255) UNIQUE NOT NULL, -- 전화번호, 유니크
+    email VARCHAR(255) UNIQUE NOT NULL, -- 이메일, 유니크
+    login_password VARCHAR(300) NOT NULL, -- 비밀번호
+    status_code INT NOT NULL DEFAULT 0, -- 상태 코드, 0: 활성, 1: 탈퇴, 기본값 0
+    username VARCHAR(255) NOT NULL, -- 사용자 이름
+    gender INT NOT NULL, -- 성별, 0: 남자, 1: 여자
+    level_code INT NOT NULL, -- 레벨 코드, 범위: 1-스타터부터 8-레벤더
+    prefer_position INT NOT NULL DEFAULT 1, -- 포지션, 기본값 1 (공격)
+    ability INT NOT NULL DEFAULT 3, -- 능력치, 기본값 3
+    profile_visibility_yn VARCHAR(1) NOT NULL DEFAULT 'N', -- 프로필 공개 여부, 기본값 N
+    level_hide_yn VARCHAR(1) NOT NULL DEFAULT 'N', -- 레벨 숨김 여부, 기본값 N
+    birth_date DATE NOT NULL, -- 생년월일
+    introduce TEXT, -- 자기 소개
+    profile_path TEXT, -- 프로필 사진 AWS 경로
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+DESC PFB_USER;
+SELECT * FROM PFB_USER;
+DROP TABLE PFB_USER;
+
+-- PFB_BLACK (블랙리스트)
+CREATE TABLE PFB_BLACK (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    black_user_id INT NOT NULL,
+    status_code INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (black_user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+DESC PFB_BLACK;
+SELECT * FROM PFB_BLACK;
+DROP TABLE PFB_BLACK;
+
+-- PFB_CARD (제재 및 POM)
+CREATE TABLE PFB_CARD (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    match_id INT NOT NULL,
+    description_code INT NOT NULL,
+    card_type INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+DROP TABLE PFB_CARD;
+
+-- PFB_USER_FEEDBACK (개별 피드백)
+CREATE TABLE PFB_USER_FEEDBACK (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    giver_id INT NOT NULL,
+    match_id INT NOT NULL,
+    feedback_type INT NOT NULL,
+    feedback INT NOT NULL,
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (giver_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+DROP TABLE PFB_USER_FEEDBACK;
+
+-- PFB_TEAM (팀)
+CREATE TABLE PFB_TEAM (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 기본 키, 자동 증가
+    leader_id INT NOT NULL, -- 팀 리더 사용자 FK
+    status_code INT DEFAULT 0 NOT NULL, -- 상태 코드
+    team_name VARCHAR(255) NOT NULL, -- 팀 이름
+    team_tag VARCHAR(255) UNIQUE NOT NULL, -- 팀 태그
+    team_gender INT NOT NULL, -- 팀 성별: 0:남성, 1:여성, 2:혼성
+    embulum_path TEXT NOT NULL, -- 엠블럼 경로
+    active_time_zone INT NOT NULL, -- 활동 시간대
+    active_monday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (월요일)
+    active_tuesday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (화요일)
+    active_wednesday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (수요일)
+    active_thirthday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (목요일)
+    active_friday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (금요일)
+    active_saturday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (토요일)
+    active_sunday VARCHAR(1) DEFAULT 'N' NOT NULL, -- 활동 요일 (일요일)
+    teenager VARCHAR(1) DEFAULT 'N' NOT NULL, -- 10대 여부
+    twenties VARCHAR(1) DEFAULT 'N' NOT NULL, -- 20대 여부
+    thirties VARCHAR(1) DEFAULT 'N' NOT NULL, -- 30대 여부
+    fourties VARCHAR(1) DEFAULT 'N' NOT NULL, -- 40대 여부
+    fifties VARCHAR(1) DEFAULT 'N' NOT NULL, -- 50대 여부
+    sixties_over VARCHAR(1) DEFAULT 'N' NOT NULL, -- 60대 이상 여부
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+desc PFB_TEAM;
+DROP TABLE PFB_TEAM;
+
+-- PFB_TEAM_MEMBER (팀 구성원)
+CREATE TABLE PFB_TEAM_MEMBER (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_id INT NOT NULL,
+    user_id INT NOT NULL,
+    status_code INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (team_id) REFERENCES PFB_TEAM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+desc PFB_TEAM_MEMBER;
+DROP TABLE PFB_TEAM_MEMBER;
+
+-- PFB_TEAM_REGIST_FORM (팀 가입 요청)
+CREATE TABLE PFB_TEAM_REGIST_FORM (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 기본 키, 자동 증가
+    team_id INT NOT NULL, -- 팀 ID, 외래키 (FK)
+    user_id INT NOT NULL, -- 사용자 ID, 외래키 (FK)
+    status_code INT DEFAULT 0 NOT NULL, -- 상태 코드: 0-신청대기, 1-승인완료, 2-가입거절, 3-가입취소
+    reject_comment INT, -- 거절 또는 취소 사유
+    FOREIGN KEY (team_id) REFERENCES PFB_TEAM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+drop table PFB_TEAM_REGIST_FORM;
+
+-- PFB_STADIUM (구장)
+CREATE TABLE PFB_STADIUM (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 기본 키, 자동 증가
+    status_code INT NOT NULL DEFAULT 0, -- 상태 코드, 기본값 0
+    stadium_name VARCHAR(255) NOT NULL, -- 경기장 이름
+    full_address VARCHAR(255) NOT NULL, -- 주소
+    contact_phone INT NOT NULL, -- 연락처 전화번호
+    contact_email VARCHAR(255) NOT NULL, -- 연락처 이메일
+    main_region INT NOT NULL, -- 주요 지역 분류
+    sub_region INT NOT NULL, -- 하위 지역 분류
+    ground_type INT NOT NULL DEFAULT 0, -- 지면 유형, 기본값 0
+    allow_soccer_shoes INT DEFAULT 0, -- 축구화 사용 가능 여부, 기본값 0
+    match_personnel INT DEFAULT 3, -- 경기 인원, 기본값 3
+    parking_yn VARCHAR(1) DEFAULT 'N', -- 주차 가능 여부, 기본값 N
+    width INT NOT NULL, -- 경기장 너비
+    height INT NOT NULL, -- 경기장 높이
+    notice TEXT NOT NULL, -- 공지 사항
+    shower_yn VARCHAR(1) DEFAULT 'N', -- 샤워 시설 유무, 기본값 N
+    sell_drink_yn VARCHAR(1) DEFAULT 'N', -- 음료 판매 여부, 기본값 N
+    lend_shoes_yn VARCHAR(1) DEFAULT 'N', -- 신발 대여 가능 여부, 기본값 N
+    toilet_yn VARCHAR(1) DEFAULT 'N', -- 화장실 유무, 기본값 N
+    lend_vest_yn VARCHAR(1) DEFAULT 'N', -- 조끼 대여 가능 여부, 기본값 N
+    lend_ball_yn VARCHAR(1) DEFAULT 'N' -- 공 대여 가능 여부, 기본값 N
+);
+desc PFB_STADIUM;
+DROP TABLE PFB_STADIUM;
+
+
+-- PFB_STADIUM_PHOTO (구장 사진)
+CREATE TABLE PFB_STADIUM_PHOTO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    stadium_id INT NOT NULL,
+    photo_path TEXT NOT NULL,
+    FOREIGN KEY (stadium_id) REFERENCES PFB_STADIUM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+desc PFB_STADIUM_PHOTO;
+DROP TABLE PFB_STADIUM_PHOTO;
+
+-- PFB_STADIUM_FEEDBACK (구장 피드백)
+CREATE TABLE PFB_STADIUM_FEEDBACK (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    stadium_id INT NOT NULL,
+    user_id INT NOT NULL,
+    feedback INT NOT NULL,
+    feedback_type INT NOT NULL,
+    FOREIGN KEY (stadium_id) REFERENCES PFB_STADIUM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+desc PFB_STADIUM_FEEDBACK;
+DROP TABLE PFB_STADIUM_FEEDBACK;
+
+-- PFB_MATCH (매치)
+CREATE TABLE PFB_MATCH (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 매치 ID, 자동 증가
+    stadium_id INT NOT NULL,  -- 구장 FK
+    manager_id INT NOT NULL,  -- 매니저 FK
+    match_type INT NOT NULL,  -- 매치 종류: 0:소셜매치, 1:팀매치, 2:구장예약
+    status_code INT NOT NULL DEFAULT 0,  -- 매치 상태 코드: 0:미정, 1:진행 중, 2:진행 완료
+    allow_gender INT NOT NULL,  -- 매치 허용 성별: 0:남성, 1:여성, 2:혼성
+    level_criterion INT NOT NULL DEFAULT 0,  -- 레벨 제한: 0:모든 레벨, 1:아마추어1 이하, 2:아마추어1 이상, 3:아마추어2 이상
+    match_start_time DATETIME NOT NULL,  -- 매치 시작 시간
+    match_end_time DATETIME NOT NULL,  -- 매치 종료 시간
+    FOREIGN KEY (stadium_id) REFERENCES PFB_STADIUM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (manager_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+desc PFB_MATCH;
+DROP TABLE PFB_MATCH;
+
+-- PFB_MATCH_USER (소셜 매치 신청 이력)
+CREATE TABLE PFB_MATCH_USER (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 사용자 매치 신청 이력 ID, 자동 증가
+    match_id INT NOT NULL,  -- 소속 매치 FK
+    user_id INT NOT NULL,  -- 사용자 FK
+    status_code INT NOT NULL DEFAULT 0,  -- 신청 상태: 0:신청 완료, 1:신청 취소
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- 업데이트된 시간
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+desc PFB_MATCH_USER;
+DROP TABLE PFB_MATCH_USER;
+
+-- PFB_MATCH_TEAM (팀 리그 신청 이력)
+CREATE TABLE PFB_MATCH_TEAM (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 팀 리그 신청 이력 ID, 자동 증가
+    match_id INT NOT NULL,  -- 매치 FK
+    team_id INT NOT NULL,  -- 팀 FK
+    status_code INT NOT NULL DEFAULT 0,  -- 신청 상태: 0:신청 완료, 1:신청 취소
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES PFB_TEAM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_MATCH_TEAM;
+DROP TABLE PFB_MATCH_TEAM;
+
+-- PFB_MATCH_ROUND_RESULT(매치 라운드별 결과)
+CREATE TABLE PFB_MATCH_ROUND_RESULT (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 라운드 결과 ID, 자동 증가
+    match_id INT NOT NULL,  -- 매치 ID, 외래 키
+    team_id INT NOT NULL,  -- 팀 ID, 외래 키
+    match_round INT NOT NULL,  -- 매치 라운드
+    goal INT NOT NULL DEFAULT 0,  -- 득점
+    concede INT NOT NULL DEFAULT 0,  -- 실점
+    result INT NOT NULL,  -- 결과
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES PFB_TEAM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_MATCH_ROUND_RESULT;
+DROP TABLE PFB_MATCH_ROUND_RESULT;
+
+CREATE TABLE PFB_STADIUM_RESERVE (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 예약 ID, 자동 증가
+    stadium_id INT NOT NULL,  -- 구장 ID, 외래 키
+    user_id INT NOT NULL,  -- 예약 사용자 ID, 외래 키
+    status_code INT NOT NULL DEFAULT 0,  -- 예약 상태 코드: 0:대기, 1:예약확정, 2:예약취소
+    match_start_time DATETIME NOT NULL,  -- 매치 시작 시간
+    match_end_time DATETIME NOT NULL,  -- 매치 종료 시간
+    FOREIGN KEY (stadium_id) REFERENCES PFB_STADIUM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_STADIUM_RESERVE;
+DROP TABLE PFB_STADIUM_RESERVE;
+
+CREATE TABLE PFB_BOARD (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 게시글 ID, 자동 증가
+    tag_type INT NOT NULL,  -- 태그 타입
+    title VARCHAR(255) NOT NULL,  -- 제목
+    content TEXT NOT NULL,  -- 내용
+    del_yn VARCHAR(1) NOT NULL DEFAULT 'N',  -- 삭제 여부, 기본값 'N'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_BOARD;
+DROP TABLE PFB_BOARD;
+
+CREATE TABLE PFB_CHAT (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 채팅 메시지 ID, 자동 증가
+    match_id INT NOT NULL,  -- 매치 ID, 외래 키
+    user_id INT NOT NULL,  -- 사용자 ID, 외래 키
+    content VARCHAR(255) NOT NULL,  -- 내용
+    del_yn VARCHAR(1) NOT NULL DEFAULT 'N',  -- 삭제 여부, 기본값 'N'
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_CHAT;
+DROP TABLE PFB_CHAT;
+
+CREATE TABLE PFB_MANAGER (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 매니저 고유 식별자, 자동 증가
+    status_code INT NOT NULL DEFAULT 0, -- 상태 코드, 기본값 0 (0: 활성, 1: 탈퇴)
+    manager_name VARCHAR(255) NOT NULL, -- 매니저 이름
+    phone_number VARCHAR(255) NOT NULL UNIQUE, -- 전화번호, 고유해야 함
+    email VARCHAR(255) NOT NULL UNIQUE, -- 이메일, 고유해야 함
+    login_password VARCHAR(255) NOT NULL, -- 로그인 비밀번호
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+
+desc PFB_MANAGER;
+DROP TABLE PFB_MANAGER;
+
+CREATE TABLE PFB_MANAGER_FEEDBACK (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 피드백 ID, 자동 증가
+    match_id INT NOT NULL,  -- 매치 ID, 외래 키
+    manager_id INT NOT NULL,  -- 매니저 ID, 외래 키
+    giver_id INT NOT NULL,  -- 피드백 제공자 ID, 외래 키
+    feedback_type INT NOT NULL,  -- 피드백 유형: 0:긍정적, 1:부정적
+    feedback INT NOT NULL,  -- 피드백: 0:최저점수, 1:시간 부합, 2:현장 부합 등
+    FOREIGN KEY (match_id) REFERENCES PFB_MATCH(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (manager_id) REFERENCES PFB_MANAGER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (giver_id) REFERENCES PFB_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+desc PFB_MANAGER_FEEDBACK;
+DROP TABLE PFB_MANAGER_FEEDBACK;
+
+CREATE TABLE PFB_TEAM_LEAGUE_RANKING (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 고유 ID, 자동 증가
+    team_id INT NOT NULL, -- 팀 ID, 외래 키(FK)
+    season VARCHAR(255) NOT NULL, -- 리그 시즌 (예: "2021-2022")
+    gender INT NOT NULL, -- 성별 구분, 0: 남자, 1: 여자
+    matches_played INT NOT NULL DEFAULT 0, -- 플레이된 경기 수, 기본값 0
+    goals INT NOT NULL DEFAULT 0, -- 득점 수, 기본값 0
+    points INT NOT NULL DEFAULT 0, -- 포인트 수, 기본값 0
+    FOREIGN KEY (team_id) REFERENCES PFB_TEAM(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 생성된 시간
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 업데이트된 시간
+);
+
+desc PFB_TEAM_LEAGUE_RANKING;
+DROP TABLE PFB_TEAM_LEAGUE_RANKING;
+
+show tables;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
