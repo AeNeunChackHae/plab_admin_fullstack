@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import stadiumRouter from "./router/stadium.js";
 import rootRouter from "./router/root.js";
 import authRouter from "./router/auth.js";
