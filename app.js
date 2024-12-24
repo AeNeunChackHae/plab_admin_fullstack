@@ -1,7 +1,11 @@
-import express from 'express';
-import stadiumRouter from "./router/stadium.js";
+import express from "express";
 import rootRouter from "./router/root.js";
 import authRouter from "./router/auth.js";
+import userRouter from "./router/user.js";
+import managerRouter from "./router/manager.js";
+import stadiumRouter from "./router/stadium.js";
+import noticeRouter from "./router/notice.js";
+import qnaRouter from "./router/qna.js";
 import cors from "cors";
 import path from "path";
 
@@ -32,12 +36,16 @@ app.set("views", path.join(process.cwd(), "template"));
 
 // Router 설정
 app.use("/", rootRouter);
-app.use("/stadium", stadiumRouter);
+app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/manager", managerRouter);
+app.use("/stadium", stadiumRouter);
+app.use("/notice", noticeRouter);
+app.use("/qna", qnaRouter);
 
 // 404 error page
-app.use((req, res, next) => {
-  res.sendStatus(404).render("error-1");
+app.use("*", (req, res, next) => {
+  res.render("not_found");
 });
 
 // 서버 호스팅
