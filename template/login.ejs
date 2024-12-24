@@ -240,6 +240,36 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       "font-family": "Poppins",
     };
   </script>
+  <script>
+    // window.onload = function () {
+    //   // URL에서 쿼리 파라미터를 확인하여 토큰 삭제
+    //   const urlParams = new URLSearchParams(window.location.search);
+    //   if (urlParams.get('clearToken') === 'true') {
+    //     localStorage.removeItem('jwtToken'); // 'jwtToken'은 실제 토큰 키 이름에 맞게 변경하세요
+    //     console.log('JWT 토큰이 로컬 스토리지에서 제거되었습니다.');
+    //   }
+    // }
+  </script>
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loginLogo = document.getElementById('kt_quick_user_toggle');
+      if (loginLogo) {
+        loginLogo.addEventListener('click', function (event) {
+          event.preventDefault();
+          const token = localStorage.getItem('jwtToken');
+          if (token) {
+            if (confirm('Are you sure you want to log out?')) {
+              localStorage.removeItem('jwtToken');
+              alert('You have been logged out.');
+              window.location.href = '/login';
+            }
+          } else {
+            window.location.href = '/login';
+          }
+        });
+      }
+    });
+  </script> -->
   <!--end::Global Config-->
   <!--begin::Global Theme Bundle(used by all pages)-->
   <script src="assets/plugins/global/plugins.bundle.js"></script>

@@ -105,4 +105,5 @@ export const config = {
     account: getEnvValue("ADMIN_ACCOUNT"),
     password: getEnvValue("ADMIN_PASSWORD"),
   },
+  jwtSecret: getEnvValue("JWT_SECRET")
 };
