@@ -17,5 +17,5 @@ export async function waitStadiumList(req, res, next) {
 export async function create(req, res, next) {
   const formData = req.body;
   console.log("formData : ", formData);
-  res.render("index");
+  res.redirect("/");
 }

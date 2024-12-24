@@ -34,6 +34,62 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
   <!--begin::Layout Themes(used by all pages)-->
   <!--end::Layout Themes-->
   <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+
+  <script>
+    // function postLogin(){
+    // const username = document.getElementById("username").value
+    // const password = document.getElementById("password").value
+ 
+    // fetch('/auth/login', {
+    //    method: 'POST',
+    //    headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //    body: JSON.stringify({ // 객체를 JSON 문자열로 변환
+    //     username: username,
+    //    password: password
+    //   })
+    //  })
+    //    .then(response => response.json())
+    //    .then(data => {
+    //      console.log(data);
+    //      localStorage.setItem("authToken", data.token)
+    //      location.href='/'
+    //    })
+    //    .catch(error => console.error('Error:', error));
+    // }
+    function postLogin() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        localStorage.setItem("authToken", data);
+        location.href = '/';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Login failed: ' + error.message);
+    });
+}
+
+   </script>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -64,8 +120,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
             <!--begin::Signin-->
             <div class="login-form login-signin">
               <!--begin::Form-->
-              <form class="form w-xxl-550px rounded-lg p-20" novalidate="novalidate" id="kt_form" action="/auth/login"
-                method="post">
+              <form class="form w-xxl-550px rounded-lg p-20" novalidate="novalidate" id="kt_form">
                 <!--begin::Title-->
                 <div class="pb-13 pt-lg-0 pt-5">
                   <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
@@ -76,7 +131,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                 <!--begin::Form group-->
                 <div class="form-group">
                   <label class="font-size-h6 font-weight-bolder text-dark">Account</label>
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="text" name="username"
+                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="text" name="username" id="username"
                     autocomplete="off" />
                 </div>
                 <!--end::Form group-->
@@ -85,14 +140,15 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                   <div class="d-flex justify-content-between mt-n5">
                     <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
                   </div>
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="password" name="password"
+                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="password" name="password" id="password"
                     autocomplete="off" />
                 </div>
                 <!--end::Form group-->
                 <!--begin::Action-->
                 <div class="pb-lg-0 pb-5">
-                  <button type="submit" id="kt_login_signin_submit"
-                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">
+                  <button type="button" id="kt_login_signin_submit"
+                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
+                    onclick="postLogin()">
                     Sign In
                   </button>
                 </div>
@@ -279,6 +335,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
   <!--begin::Page Scripts(used by this page)-->
   <script src="assets/js/pages/custom/login/login.js"></script>
   <!--end::Page Scripts-->
+  
 </body>
 <!--end::Body-->
 
