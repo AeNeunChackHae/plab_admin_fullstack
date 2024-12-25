@@ -12,331 +12,372 @@ Support: https://keenthemes.com/theme-support
 License: You must have a valid license purchased only from themes.getbootstrap.com(the above link) in order to legally use the theme for your project.
 -->
 <html lang="en">
-<!--begin::Head-->
+  <!--begin::Head-->
 
-<head>
-  <base href="../../../" />
-  <meta charset="utf-8" />
-  <title>Keen | Login Page 2</title>
-  <meta name="description" content="Login page example" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!--begin::Fonts-->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-  <!--end::Fonts-->
-  <!--begin::Page Custom Styles(used by this page)-->
-  <link href="assets/css/pages/login/login-2.css" rel="stylesheet" type="text/css" />
-  <!--end::Page Custom Styles-->
-  <!--begin::Global Theme Styles(used by all pages)-->
-  <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-  <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
-  <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-  <!--end::Global Theme Styles-->
-  <!--begin::Layout Themes(used by all pages)-->
-  <!--end::Layout Themes-->
-  <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+  <head>
+    <base href="../../../" />
+    <meta charset="utf-8" />
+    <title>Keen | Login Page 2</title>
+    <meta name="description" content="Login page example" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"
+    />
+    <!--end::Fonts-->
+    <!--begin::Page Custom Styles(used by this page)-->
+    <link
+      href="assets/css/pages/login/login-2.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!--end::Page Custom Styles-->
+    <!--begin::Global Theme Styles(used by all pages)-->
+    <link
+      href="assets/plugins/global/plugins.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="assets/plugins/custom/prismjs/prismjs.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Global Theme Styles-->
+    <!--begin::Layout Themes(used by all pages)-->
+    <!--end::Layout Themes-->
+    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
 
-  <script>
-    // function postLogin(){
-    // const username = document.getElementById("username").value
-    // const password = document.getElementById("password").value
- 
-    // fetch('/auth/login', {
-    //    method: 'POST',
-    //    headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //    body: JSON.stringify({ // 객체를 JSON 문자열로 변환
-    //     username: username,
-    //    password: password
-    //   })
-    //  })
-    //    .then(response => response.json())
-    //    .then(data => {
-    //      console.log(data);
-    //      localStorage.setItem("authToken", data.token)
-    //      location.href='/'
-    //    })
-    //    .catch(error => console.error('Error:', error));
-    // }
-    function postLogin() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
+    <script>
+      const authToken = localStorage.getItem("authToken");
+      // 토큰이 있는 로그인 된 사용자
+      if (authToken != null || authToken != undefined) {
+        if (confirm("로그아웃 하시겠습니까?")) {
+          localStorage.removeItem("authToken");
+        } else {
+          location.href = "/";
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data);
-        localStorage.setItem("authToken", data);
-        location.href = '/';
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Login failed: ' + error.message);
-    });
-}
-
-   </script>
-</head>
-<!--end::Head-->
-<!--begin::Body-->
-
-<body id="kt_body" class="header-mobile-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
-  <!--begin::Main-->
-  <div class="d-flex flex-column flex-root">
-    <!--begin::Login-->
-    <div
-      class="login login-2 login-signin-on d-flex flex-column flex-column-fluid bg-white position-relative overflow-hidden"
-      id="kt_login">
-      <!--begin::Header-->
-      <div class="login-header py-10 flex-column-auto">
-        <div
-          class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
-          <!--begin::Logo-->
-          <a href="/index.html" class="flex-column-auto py-5 py-md-0">
-            <img src="assets/media/logos/logo-6.svg" alt="logo" class="h-50px" />
-          </a>
-          <!--end::Logo-->
-        </div>
-      </div>
-      <!--end::Header-->
-      <!--begin::Body-->
-      <div class="login-body d-flex flex-column-fluid align-items-stretch justify-content-center">
-        <div class="container row">
-          <div class="col-lg-6 d-flex align-items-center">
-            <!--begin::Signin-->
-            <div class="login-form login-signin">
-              <!--begin::Form-->
-              <form class="form w-xxl-550px rounded-lg p-20" novalidate="novalidate" id="kt_form">
-                <!--begin::Title-->
-                <div class="pb-13 pt-lg-0 pt-5">
-                  <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
-                    Welcome to Admin
-                  </h3>
-                </div>
-                <!--begin::Title-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <label class="font-size-h6 font-weight-bolder text-dark">Account</label>
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="text" name="username" id="username"
-                    autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <div class="d-flex justify-content-between mt-n5">
-                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-                  </div>
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="password" name="password" id="password"
-                    autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Action-->
-                <div class="pb-lg-0 pb-5">
-                  <button type="button" id="kt_login_signin_submit"
-                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
-                    onclick="postLogin()">
-                    Sign In
-                  </button>
-                </div>
-                <!--end::Action-->
-              </form>
-              <!--end::Form-->
-            </div>
-            <!--end::Signin-->
-            <!--begin::Signup-->
-            <div class="login-form login-signup">
-              <!--begin::Form-->
-              <form class="form w-xxl-550px rounded-lg p-20" novalidate="novalidate" id="kt_login_signup_form">
-                <!--begin::Title-->
-                <div class="pb-13 pt-lg-0 pt-5">
-                  <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
-                    Sign Up
-                  </h3>
-                  <p class="text-muted font-weight-bold font-size-h4">
-                    Enter your details to create your account
-                  </p>
-                </div>
-                <!--end::Title-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="text"
-                    placeholder="Fullname" name="fullname" autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="email"
-                    placeholder="Email" name="email" autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="password"
-                    placeholder="Password" name="password" autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="password"
-                    placeholder="Confirm password" name="cpassword" autocomplete="off" />
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group">
-                  <div class="checkbox-inline">
-                    <label class="checkbox">
-                      <input type="checkbox" name="agree" />
-                      <span></span>I Agree the
-                      <a href="#" class="ml-1">terms and conditions</a>.</label>
-                  </div>
-                </div>
-                <!--end::Form group-->
-                <!--begin::Form group-->
-                <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
-                  <button type="button" id="kt_login_signup_submit"
-                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">
-                    Submit
-                  </button>
-                  <button type="button" id="kt_login_signup_cancel"
-                    class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">
-                    Cancel
-                  </button>
-                </div>
-                <!--end::Form group-->
-              </form>
-              <!--end::Form-->
-            </div>
-            <!--end::Signup-->
-            <!--begin::Forgot-->
-            <!--end::Forgot-->
-          </div>
-          <div
-            class="col-lg-6 bgi-size-contain bgi-no-repeat bgi-position-y-center bgi-position-x-center min-h-150px mt-10 m-md-0"
-            style="
-                background-image: url(assets/media/svg/illustrations/accomplishment.svg);
-              "></div>
-        </div>
-      </div>
-      <!--end::Body-->
-      <!--begin::Footer-->
-      <!--end::Footer-->
-    </div>
-    <!--end::Login-->
-  </div>
-  <!--end::Main-->
-  <script>
-    var HOST_URL = "https://preview.keenthemes.com/keen/theme/tools/preview";
-  </script>
-  <!--begin::Global Config(global config for global JS scripts)-->
-  <script>
-    var KTAppSettings = {
-      breakpoints: { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1200 },
-      colors: {
-        theme: {
-          base: {
-            white: "#ffffff",
-            primary: "#3699FF",
-            secondary: "#E5EAEE",
-            success: "#1BC5BD",
-            info: "#6993FF",
-            warning: "#FFA800",
-            danger: "#F64E60",
-            light: "#F3F6F9",
-            dark: "#212121",
-          },
-          light: {
-            white: "#ffffff",
-            primary: "#E1F0FF",
-            secondary: "#ECF0F3",
-            success: "#C9F7F5",
-            info: "#E1E9FF",
-            warning: "#FFF4DE",
-            danger: "#FFE2E5",
-            light: "#F3F6F9",
-            dark: "#D6D6E0",
-          },
-          inverse: {
-            white: "#ffffff",
-            primary: "#FFFFFF",
-            secondary: "#212121",
-            success: "#ffffff",
-            info: "#ffffff",
-            warning: "#ffffff",
-            danger: "#ffffff",
-            light: "#464E5F",
-            dark: "#ffffff",
-          },
-        },
-        gray: {
-          "gray-100": "#F3F6F9",
-          "gray-200": "#ECF0F3",
-          "gray-300": "#E5EAEE",
-          "gray-400": "#D6D6E0",
-          "gray-500": "#B5B5C3",
-          "gray-600": "#80808F",
-          "gray-700": "#464E5F",
-          "gray-800": "#1B283F",
-          "gray-900": "#212121",
-        },
-      },
-      "font-family": "Poppins",
-    };
-  </script>
-  <script>
-    // window.onload = function () {
-    //   // URL에서 쿼리 파라미터를 확인하여 토큰 삭제
-    //   const urlParams = new URLSearchParams(window.location.search);
-    //   if (urlParams.get('clearToken') === 'true') {
-    //     localStorage.removeItem('jwtToken'); // 'jwtToken'은 실제 토큰 키 이름에 맞게 변경하세요
-    //     console.log('JWT 토큰이 로컬 스토리지에서 제거되었습니다.');
-    //   }
-    // }
-  </script>
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const loginLogo = document.getElementById('kt_quick_user_toggle');
-      if (loginLogo) {
-        loginLogo.addEventListener('click', function (event) {
-          event.preventDefault();
-          const token = localStorage.getItem('jwtToken');
-          if (token) {
-            if (confirm('Are you sure you want to log out?')) {
-              localStorage.removeItem('jwtToken');
-              alert('You have been logged out.');
-              window.location.href = '/login';
-            }
-          } else {
-            window.location.href = '/login';
-          }
-        });
       }
-    });
-  </script> -->
-  <!--end::Global Config-->
-  <!--begin::Global Theme Bundle(used by all pages)-->
-  <script src="assets/plugins/global/plugins.bundle.js"></script>
-  <script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
-  <script src="assets/js/scripts.bundle.js"></script>
-  <!--end::Global Theme Bundle-->
-  <!--begin::Page Scripts(used by this page)-->
-  <script src="assets/js/pages/custom/login/login.js"></script>
-  <!--end::Page Scripts-->
-  
-</body>
-<!--end::Body-->
 
+      function postLogin() {
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+
+        fetch("/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // 객체를 JSON 문자열로 변환
+            username: username.value,
+            password: password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.status) {
+              alert("아이디 혹은 비밀번호를 다시 입력해주세요.");
+              username.value = "";
+              password.value = "";
+              return;
+            }
+            localStorage.setItem("authToken", data.token);
+            location.href = "/";
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+
+  <body
+    id="kt_body"
+    class="header-mobile-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading"
+  >
+    <!--begin::Main-->
+    <div class="d-flex flex-column flex-root">
+      <!--begin::Login-->
+      <div
+        class="login login-2 login-signin-on d-flex flex-column flex-column-fluid bg-white position-relative overflow-hidden"
+        id="kt_login"
+      >
+        <!--begin::Header-->
+        <div class="login-header py-10 flex-column-auto">
+          <div
+            class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between"
+          >
+            <!--begin::Logo-->
+            <a href="/" class="flex-column-auto py-5 py-md-0">
+              <img
+                src="assets/media/logos/logo-6.svg"
+                alt="logo"
+                class="h-50px"
+              />
+            </a>
+            <!--end::Logo-->
+          </div>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div
+          class="login-body d-flex flex-column-fluid align-items-stretch justify-content-center"
+        >
+          <div class="container row">
+            <div class="col-lg-6 d-flex align-items-center">
+              <!--begin::Signin-->
+              <div class="login-form login-signin">
+                <!--begin::Form-->
+                <form
+                  class="form w-xxl-550px rounded-lg p-20"
+                  novalidate="novalidate"
+                  id="kt_form"
+                >
+                  <!--begin::Title-->
+                  <div class="pb-13 pt-lg-0 pt-5">
+                    <h3
+                      class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg"
+                    >
+                      Welcome to Admin
+                    </h3>
+                  </div>
+                  <!--begin::Title-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <label class="font-size-h6 font-weight-bolder text-dark"
+                      >Account</label
+                    >
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg"
+                      type="text"
+                      name="username"
+                      id="username"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <div class="d-flex justify-content-between mt-n5">
+                      <label
+                        class="font-size-h6 font-weight-bolder text-dark pt-5"
+                        >Password</label
+                      >
+                    </div>
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg"
+                      type="password"
+                      name="password"
+                      id="password"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Action-->
+                  <div class="pb-lg-0 pb-5">
+                    <button
+                      type="button"
+                      id="kt_login_signin_submit"
+                      class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
+                      onclick="postLogin()"
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                  <!--end::Action-->
+                </form>
+                <!--end::Form-->
+              </div>
+              <!--end::Signin-->
+              <!--begin::Signup-->
+              <div class="login-form login-signup">
+                <!--begin::Form-->
+                <form
+                  class="form w-xxl-550px rounded-lg p-20"
+                  novalidate="novalidate"
+                  id="kt_login_signup_form"
+                >
+                  <!--begin::Title-->
+                  <div class="pb-13 pt-lg-0 pt-5">
+                    <h3
+                      class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg"
+                    >
+                      Sign Up
+                    </h3>
+                    <p class="text-muted font-weight-bold font-size-h4">
+                      Enter your details to create your account
+                    </p>
+                  </div>
+                  <!--end::Title-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6"
+                      type="text"
+                      placeholder="Fullname"
+                      name="fullname"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6"
+                      type="email"
+                      placeholder="Email"
+                      name="email"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6"
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <input
+                      class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6"
+                      type="password"
+                      placeholder="Confirm password"
+                      name="cpassword"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group">
+                    <div class="checkbox-inline">
+                      <label class="checkbox">
+                        <input type="checkbox" name="agree" />
+                        <span></span>I Agree the
+                        <a href="#" class="ml-1">terms and conditions</a
+                        >.</label
+                      >
+                    </div>
+                  </div>
+                  <!--end::Form group-->
+                  <!--begin::Form group-->
+                  <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
+                    <button
+                      type="button"
+                      id="kt_login_signup_submit"
+                      class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      type="button"
+                      id="kt_login_signup_cancel"
+                      class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!--end::Form group-->
+                </form>
+                <!--end::Form-->
+              </div>
+              <!--end::Signup-->
+              <!--begin::Forgot-->
+              <!--end::Forgot-->
+            </div>
+            <div
+              class="col-lg-6 bgi-size-contain bgi-no-repeat bgi-position-y-center bgi-position-x-center min-h-150px mt-10 m-md-0"
+              style="
+                background-image: url(assets/media/svg/illustrations/accomplishment.svg);
+              "
+            ></div>
+          </div>
+        </div>
+        <!--end::Body-->
+        <!--begin::Footer-->
+        <!--end::Footer-->
+      </div>
+      <!--end::Login-->
+    </div>
+    <!--end::Main-->
+    <script>
+      var HOST_URL = "https://preview.keenthemes.com/keen/theme/tools/preview";
+    </script>
+    <!--begin::Global Config(global config for global JS scripts)-->
+    <script>
+      var KTAppSettings = {
+        breakpoints: { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1200 },
+        colors: {
+          theme: {
+            base: {
+              white: "#ffffff",
+              primary: "#3699FF",
+              secondary: "#E5EAEE",
+              success: "#1BC5BD",
+              info: "#6993FF",
+              warning: "#FFA800",
+              danger: "#F64E60",
+              light: "#F3F6F9",
+              dark: "#212121",
+            },
+            light: {
+              white: "#ffffff",
+              primary: "#E1F0FF",
+              secondary: "#ECF0F3",
+              success: "#C9F7F5",
+              info: "#E1E9FF",
+              warning: "#FFF4DE",
+              danger: "#FFE2E5",
+              light: "#F3F6F9",
+              dark: "#D6D6E0",
+            },
+            inverse: {
+              white: "#ffffff",
+              primary: "#FFFFFF",
+              secondary: "#212121",
+              success: "#ffffff",
+              info: "#ffffff",
+              warning: "#ffffff",
+              danger: "#ffffff",
+              light: "#464E5F",
+              dark: "#ffffff",
+            },
+          },
+          gray: {
+            "gray-100": "#F3F6F9",
+            "gray-200": "#ECF0F3",
+            "gray-300": "#E5EAEE",
+            "gray-400": "#D6D6E0",
+            "gray-500": "#B5B5C3",
+            "gray-600": "#80808F",
+            "gray-700": "#464E5F",
+            "gray-800": "#1B283F",
+            "gray-900": "#212121",
+          },
+        },
+        "font-family": "Poppins",
+      };
+    </script>
+    <!--end::Global Config-->
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    <script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+    <script src="assets/js/scripts.bundle.js"></script>
+    <!--end::Global Theme Bundle-->
+    <!--begin::Page Scripts(used by this page)-->
+    <script src="assets/js/pages/custom/login/login.js"></script>
+    <!--end::Page Scripts-->
+  </body>
+  <!--end::Body-->
 </html>

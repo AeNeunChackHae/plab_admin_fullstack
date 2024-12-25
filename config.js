@@ -105,5 +105,18 @@ export const config = {
     account: getEnvValue("ADMIN_ACCOUNT"),
     password: getEnvValue("ADMIN_PASSWORD"),
   },
-  jwtSecret: getEnvValue("JWT_SECRET")
+  jwt: {
+    secretKey: getEnvValue("JWT_SECRET"),
+    expiresInSec: parseInt(getEnvValue("JWT_EXPIRES_SEC", 259200)),
+  },
+  bcrypt: {
+    saltRounds: parseInt(getEnvValue("BCRYPT_SALT_ROUNDS")),
+  },
+  hosting_port: {
+    admin_full: parseInt(getEnvValue("ADMIN_FULL")),
+    user_front: parseInt(getEnvValue("USER_FRONT")),
+    user_back: parseInt(getEnvValue("USER_BACK")),
+    manager_front: parseInt(getEnvValue("MANAGER_FRONT")),
+    manager_back: parseInt(getEnvValue("MANAGER_BACK")),
+  },
 };

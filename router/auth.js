@@ -8,7 +8,8 @@ router.get("/login", authController.loginPage);
 
 router.post("/login", authController.loginLogic);
 
-router.get("/tokenVal", auth, (req, res) => res.status(200).json({ status: true }))
+router.get("/tokenVal", auth, (req, res) =>
+  res.status(200).json({ status: true })
+);
 
 export default router;
- 

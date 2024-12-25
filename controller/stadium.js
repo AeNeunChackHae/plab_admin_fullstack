@@ -3,11 +3,17 @@ import { config } from "../config.js";
 import * as stadiumRepository from "../data/stadium.js";
 
 export async function registPage(req, res, next) {
-  res.render("detail_page", { page_title: "구장", table_title: "구장 목록" });
+  res.render("stadium_detail", {
+    page_title: "구장",
+    table_title: "구장 목록",
+  });
 }
 
 export async function editPage(req, res, next) {
-  res.render("detail_page", { page_title: "구장" });
+  res.render("stadium_detail", {
+    page_title: "구장",
+    table_title: "구장 목록",
+  });
 }
 
 export async function waitStadiumList(req, res, next) {

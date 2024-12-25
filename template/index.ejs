@@ -58,9 +58,10 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
     <link rel="shortcut icon" href="/assets/media/logos/favicon.ico" />
     <script>
       const authToken = localStorage.getItem("authToken");
-      console.log("authToken: ", authToken);
-      if (authToken != "null") {
-        fetch("/api/endpoint", {
+      if (authToken == null || authToken == undefined) {
+        location.href = "/auth/login";
+      } else {
+        fetch("/auth/tokenVal", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -69,8 +70,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            localStorage.setItem("authToken", data.token);
-            location.href = "/";
+            if (!data.status) location.href = "/auth/login";
           })
           .catch((error) => console.error("Error:", error));
       }
