@@ -4,7 +4,7 @@ import * as fileUpload from "../middleware/fileUpload.js";
 
 const router = express.Router();
 
-router.get("/", stadiumController.waitStadiumList);
+router.get("/", stadiumController.stadiumList);
 
 router.get("/regist", stadiumController.registPage);
 

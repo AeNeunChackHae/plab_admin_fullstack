@@ -65,8 +65,6 @@ export const config = {
     ground_type_code: getEnvValue("GROUND_TYPE_CODE"),
     match_gender_type_code: getEnvValue("MATCH_GENDER_TYPE_CODE"),
     match_level_limit_code: getEnvValue("MATCH_LEVEL_LIMIT_CODE"),
-    match_player_count_code: getEnvValue("MATCH_PLAYER_COUNT_CODE"),
-    stud_usage_code: getEnvValue("STUD_USAGE_CODE"),
     applicant_status_code: getEnvValue("APPLICANT_STATUS_CODE"),
     match_type_code: getEnvValue("MATCH_TYPE_CODE"),
     match_team_type_code: getEnvValue("MATCH_TEAM_TYPE_CODE"),
@@ -74,6 +72,7 @@ export const config = {
     match_reservation_status_code: getEnvValue("MATCH_RESERVATION_STATUS_CODE"),
     positive_feedback_code: getEnvValue("POSITIVE_FEEDBACK_CODE"),
     negative_feedback_code: getEnvValue("NEGATIVE_FEEDBACK_CODE"),
+    stadium_table_columns: getEnvValue("STADIUM_TABLE_COLUMNS"),
   },
   region: {
     region_main_category_code: getEnvValue("REGION_MAIN_CATEGORY_CODE"),
