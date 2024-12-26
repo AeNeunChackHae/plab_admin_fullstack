@@ -21,7 +21,7 @@ function token_validation(req, res, next) {
     jwt.verify(token, config.jwt.secretKey, (err, decoded) => {
       if (err) {
         console.log("Token is invalid: ", err.message);
-        return res.status(401).json({ status: false });
+        return res.json({ status: false });
       }
 
       // 정상 authToken이 있을 떄
