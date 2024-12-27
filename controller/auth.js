@@ -15,7 +15,6 @@ export async function loginLogic(req, res, next) {
   };
 
   if (admin_account === username && admin_password === password) {
-    console.log("payload: ", payload);
     const token = jwt.sign(payload, config.jwt.secretKey, { expiresIn: "1h" }); // JWT 토큰 생성
     console.log("token: ", token);
     return res.status(200).json({ status: true, token });

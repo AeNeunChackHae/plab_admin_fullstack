@@ -10,11 +10,8 @@ router.get("/regist", stadiumController.registPage);
 
 router.get("/edit", stadiumController.editPage);
 
-router.post(
-  "/regist",
-  fileUpload.fileUpload,
-  fileUpload.aws_s3_upload,
-  stadiumController.create
-);
+router.post("/regist", fileUpload.fileUpload, fileUpload.aws_s3_upload, stadiumController.create);
+
+router.get("/subRegion/:id", stadiumController.subRegion)
 
 export default router;

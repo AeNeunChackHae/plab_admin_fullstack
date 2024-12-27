@@ -23,6 +23,7 @@ export const config = {
     bucket_region: getEnvValue("AWS_BUCKET_REGION"),
     access_key: getEnvValue("AWS_ACCESS_KEY"),
     secret_key: getEnvValue("AWS_SECRET_KEY"),
+    bucket_directory: getEnvValue("AWS_BUCKET_DIRECTORY"),
   },
   mypage: {
     play_style_code: getEnvValue("PLAY_STYLE_CODE"),
@@ -75,7 +76,7 @@ export const config = {
     stadium_table_columns: getEnvValue("STADIUM_TABLE_COLUMNS"),
   },
   region: {
-    region_main_category_code: getEnvValue("REGION_MAIN_CATEGORY_CODE"),
+    main_region_code: getEnvValue("MAIN_REGION_CODE"),
     region_jeju_code: getEnvValue("REGION_JEJU_CODE"),
     region_gyeongnam_code: getEnvValue("REGION_GYEONGNAM_CODE"),
     region_gyeongbuk_code: getEnvValue("REGION_GYEONGBUK_CODE"),
@@ -118,4 +119,8 @@ export const config = {
     manager_front: parseInt(getEnvValue("MANAGER_FRONT")),
     manager_back: parseInt(getEnvValue("MANAGER_BACK")),
   },
+  fileUpload: {
+    admin_stadium_input_name: getEnvValue("ADMIN_STADIUM_REGIST"),
+    was_upload_directory: getEnvValue("WAS_UPLOAD_DIRECTORY"),
+  }
 };
