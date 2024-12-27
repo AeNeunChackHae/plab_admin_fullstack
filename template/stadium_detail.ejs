@@ -53,7 +53,37 @@
       }
     </style>
     <!-- custom script -->
-    <script></script>
+    <script>
+      function mainRegionChange(e){
+        console.log('mainRegionChange: ', e.target.value);
+        
+        const url = 'http://127.0.0.1:8080/stadium/subRegion/'+e.target.value;
+        const options = {
+          method: 'GET', // HTTP 메서드 설정
+          headers: {
+            'Content-Type': 'application/json', // 요청의 콘텐츠 타입 헤더
+          }
+        };
+
+        fetch(url, options)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            const subRegionElement = document.getElementById('sub_region')
+            subRegionElement.innerHTML = ''
+            const defaultOptionTag = document.createElement('option')
+            defaultOptionTag.textContent = 'Select'
+            subRegionElement.appendChild(defaultOptionTag)
+            data.data.forEach((item, idx) => {
+              const optionElement = document.createElement('option')
+              optionElement.value = idx
+              optionElement.textContent = item
+              subRegionElement.appendChild(optionElement)
+            });
+          })
+          .catch(error => console.error('Error:', error));
+      }
+    </script>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -487,7 +517,7 @@
                 <div class="card card-custom">
                   <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
-                      <h3 class="card-label">구장 목록</h3>
+                      <h3 class="card-label"><%= sub_title %></h3>
                     </div>
                   </div>
                   <div class="card-body p-0">
@@ -553,13 +583,13 @@
                                               ></i>
                                               <input
                                                 type="file"
-                                                name="profile_avatar"
+                                                name="photo"
                                                 accept=".png, .jpg, .jpeg"
                                               />
-                                              <input
+                                              <!-- <input
                                                 type="hidden"
-                                                name="profile_avatar_remove"
-                                              />
+                                                name="photo_remove"
+                                              /> -->
                                             </label>
                                             <span
                                               class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
@@ -577,6 +607,33 @@
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 상태</label>
+                                        <div class="col-lg-9 col-xl-9">
+                                          <select id="status_code" name="status_code" class="form-control form-control-solid form-control-lg">
+                                            <option value="">Select</option>
+                                            <option value=0>승인 대기</option>
+                                            <option value=1>정상 운영</option>
+                                            <option value=2>미운영</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 타입</label>
+                                        <div class="col-lg-9 col-xl-9">
+                                          <select id="ground_type" name="ground_type" class="form-control form-control-solid form-control-lg">
+                                            <option value="">Select</option>
+                                            <option value=0>인조잔디</option>
+                                            <option value=1>천연잔디</option>
+                                            <option value=2>인도어</option>
+                                            <option value=3>맨땅</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group row">
                                         <label
                                           class="col-xl-3 col-lg-3 col-form-label"
                                           >구장 이름</label
@@ -586,7 +643,7 @@
                                             class="form-control form-control-solid form-control-lg"
                                             name="stadium_name"
                                             type="text"
-                                            value=""
+                                            value="서울 강동 송파 풋살파크"
                                             placeholder="예 : 서울 노원 RC 풋살 스타디움"
                                           />
                                         </div>
@@ -603,7 +660,7 @@
                                             class="form-control form-control-solid form-control-lg"
                                             name="full_address"
                                             type="text"
-                                            value=""
+                                            value="서울특별시 송파구 송파로 615-48 8층"
                                             placeholder="예 : 서울특별시 노원구 노원로238 4층"
                                           />
                                         </div>
@@ -628,7 +685,7 @@
                                               type="number"
                                               class="form-control form-control-solid form-control-lg"
                                               name="contact_phone"
-                                              value=""
+                                              value="01011111111"
                                               placeholder="대쉬(-)없이 숫자만 입력해주세요"
                                             />
                                           </div>
@@ -659,9 +716,9 @@
                                             <input
                                               type="text"
                                               class="form-control form-control-solid form-control-lg"
-                                              name="email"
+                                              name="contact_email"
                                               placeholder="구장주님의 Email을 입력해주세요"
-                                              value=""
+                                              value="asg1111@gmail.com"
                                             />
                                           </div>
                                           <div
@@ -673,149 +730,182 @@
                                       <!--begin::Group-->
                                       <div class="form-group row">
                                         <div class="col-lg-6">
+                                          <div class="form-group row fv-plugins-icon-container">
+                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 가로 길이</label>
+                                            <div class="col-lg-8 col-xl-8">
+                                              <div class="input-group input-group-solid input-group-lg">
+                                                <input class="form-control form-control-solid form-control-lg" name="width" type="number" value="18" />
+                                              </div>
+                                              <div class="fv-plugins-message-container"></div>
+                                            <div class="fv-plugins-message-container"></div></div>
+                                          </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                          <div class="form-group row fv-plugins-icon-container">
+                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 세로 길이</label>
+                                            <div class="col-lg-8 col-xl-8">
+                                              <div class="input-group input-group-solid input-group-lg">
+                                                <input class="form-control form-control-solid form-control-lg" name="height" type="number" value="30" />
+                                              </div>
+                                              <div class="fv-plugins-message-container"></div>
+                                            <div class="fv-plugins-message-container"></div></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group row">
+                                        <div class="col-lg-6">
                                           <label>주소 대분류</label>
                                           <select
+                                            id="main_region"
                                             name="main_region"
                                             class="form-control form-control-solid form-control-lg"
+                                            onchange="mainRegionChange(event)"
                                           >
                                             <option value="">Select</option>
-                                            <option value="AF">
-                                              Afghanistan
-                                            </option>
-                                            <option value="AX">
-                                              Åland Islands
-                                            </option>
-                                            <option value="AL">Albania</option>
-                                            <option value="DZ">Algeria</option>
+                                            <% main_region.forEach(function(item, idx) { %>
+                                              <option value="<%= idx %>"><%= item %></option>
+                                            <% }); %>
                                           </select>
                                         </div>
                                         <div class="col-lg-6">
                                           <label>주소 소분류</label>
                                           <select
+                                            id="sub_region"
                                             name="sub_region"
                                             class="form-control form-control-solid form-control-lg"
                                           >
                                             <option value="">Select</option>
-                                            <option value="AF">
-                                              Afghanistan
-                                            </option>
-                                            <option value="AX">
-                                              Åland Islands
-                                            </option>
-                                            <option value="AL">Albania</option>
-                                            <option value="DZ">Algeria</option>
                                           </select>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group row">
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >샤워실</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="shower_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="shower_yn" value="Y">
+                                            <span></span>Y</label>
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="shower_yn" checked="checked" value="N">
+                                            <span></span>N</label>
+                                          </div>
                                         </div>
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >음료 판매</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="sell_drink_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                              <input type="radio" name="sell_drink_yn" value="Y">
+                                              <span></span>Y</label>
+                                              <label class="radio radio-primary">
+                                              <input type="radio" name="sell_drink_yn" checked="checked" value="N">
+                                              <span></span>N</label>
+                                          </div>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group row">
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >풋살화 대여</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="lend_shoes_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="lend_shoes_yn" value="Y">
+                                            <span></span>Y</label>
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="lend_shoes_yn" checked="checked" value="N">
+                                            <span></span>N</label>
+                                          </div>
                                         </div>
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >화장실</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="toilet_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                              <input type="radio" name="toilet_yn" value="Y">
+                                              <span></span>Y</label>
+                                              <label class="radio radio-primary">
+                                              <input type="radio" name="toilet_yn" checked="checked" value="N">
+                                              <span></span>N</label>
+                                          </div>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group row">
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >조끼 대여</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="lend_vest_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="lend_vest_yn" value="Y">
+                                            <span></span>Y</label>
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="lend_vest_yn" checked="checked" value="N">
+                                            <span></span>N</label>
+                                          </div>
                                         </div>
-                                        <label class="col-3 col-form-label"
+                                        <label class="col-2 col-form-label"
                                           >풋살공 대여</label
                                         >
                                         <div
-                                          class="col-3 d-flex justify-content-end"
+                                          class="col-4 d-flex justify-content-end"
                                         >
-                                          <span class="switch switch-sm">
-                                            <label>
-                                              <input
-                                                type="checkbox"
-                                                name="lend_ball_yn"
-                                              />
-                                              <span></span>
-                                            </label>
-                                          </span>
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                              <input type="radio" name="lend_ball_yn" value="Y">
+                                              <span></span>Y</label>
+                                              <label class="radio radio-primary">
+                                              <input type="radio" name="lend_ball_yn" checked="checked" value="N">
+                                              <span></span>N</label>
+                                          </div>
                                         </div>
                                       </div>
                                       <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group row">
+                                        <label class="col-2 col-form-label"
+                                          >주차 가능 여부</label
+                                        >
+                                        <div
+                                          class="col-4 d-flex justify-content-end"
+                                        >
+                                          <div class="radio-inline d-flex">
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="parking_yn" value="Y">
+                                            <span></span>Y</label>
+                                            <label class="radio radio-primary">
+                                            <input type="radio" name="parking_yn" checked="checked" value="N">
+                                            <span></span>N</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <div class="form-group">
+                                        <label for="exampleTextarea">구장 특이사항</label>
+                                        <textarea class="form-control form-control-solid" rows="3" id="notice" name="notice" style="max-height: 300px;"></textarea>
+                                      </div>
                                     </div>
                                     <!--end::Wizard Step 1-->
                                     <!--begin::Wizard Step 2-->

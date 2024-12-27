@@ -23,7 +23,7 @@ export async function aws_s3_upload(req, res, next) {
 
   // // 버킷 이름과 S3에서의 파일명 설정
   const bucketName = config.aws.bucket_name;
-  const key = "uploads/" + fileObject.filename;
+  const key = config.aws.bucket_directory + fileObject.filename;
 
   // 파일을 읽고 S3에 업로드
   const uploadFile = () => {
@@ -33,29 +33,47 @@ export async function aws_s3_upload(req, res, next) {
       Bucket: bucketName,
       Key: key,
       Body: fileContent,
+      ACL: 'public-read'
     };
 
-    s3.upload(params, function (err, data) {
-      if (err) {
-        console.log("Error", err);
-      }
-      if (data) {
-        console.log("Upload Success", data.Location);
-      }
-    });
+    return new Promise((resolve, reject) =>{
+      s3.upload(params, function (err, data) {
+        if (err) {
+          console.log("Error", err);
+        }
+        if (data) {
+          console.log("Upload Success", data.Location);
+          req.awsUploadPath = data.Location;
+          try {
+            fs.unlinkSync(filePath);
+            console.log('파일이 성공적으로 삭제되었습니다.');
+            resolve()
+          } catch (err) {
+              console.error('파일 삭제 중 오류 발생:', err);
+              reject()
+          }
+        }
+      });
+    })
   };
 
-  uploadFile();
-  next();
+  await uploadFile().then(result => next()).catch(error => console.log('uploadFile() catch: ', error));
 }
 
 // Body에 multipart file을 서버에 업로드
 export async function fileUpload(req, res, next) {
+
+  const uploadPath = path.join(process.cwd(), "uploads");
+
+  // 폴더가 없으면 생성하기
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+
   const storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-      const uploadPath = path.join(process.cwd(), "uploads");
+    destination: function (req, file, callback) { // destination은 저장경로에 관련된 속성
       if (uploadPath) {
-        callback(null, "./uploads");
+        callback(null, config.fileUpload.was_upload_directory); // 에러발생시 리턴되는 error 객체, 저장경로 or 파일면
       } else {
         callback(new Error("Upload target directory None"), null);
       }
@@ -68,15 +86,23 @@ export async function fileUpload(req, res, next) {
     },
   });
 
-  const upload = multer({ storage: storage }).single("profile_avatar");
+  try{
+    const upload = multer({ storage: storage }).single(config.fileUpload.admin_stadium_input_name);
 
-  // 미들웨어라서 실행을 해줘야 업로드가 진행됨
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json({ error: err.message });
-    } else if (err) {
-      return res.status(500).json({ error: "A file upload error occurred!" });
-    }
-    next();
-  });
+    // 미들웨어라서 실행을 해줘야 업로드가 진행됨
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        return res.render('error', {error:err.message})
+      } else if (err) {
+        return res.render('error', {error:'A file upload error occurred!'})
+      } else if (!req.file) {
+        // 파일이 없는 경우
+        return res.render('error', {error: 'No file provided or wrong field name!'});
+      }
+      next();
+    });
+  }catch(error){
+    console.log('fileUpload 92 line catch error\n', error)
+    return res.render('error', {error})
+  }
 }
