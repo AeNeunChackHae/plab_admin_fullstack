@@ -52,38 +52,7 @@
         -moz-appearance: textfield;
       }
     </style>
-    <!-- custom script -->
-    <script>
-      function mainRegionChange(e){
-        console.log('mainRegionChange: ', e.target.value);
-        
-        const url = 'http://127.0.0.1:8080/stadium/subRegion/'+e.target.value;
-        const options = {
-          method: 'GET', // HTTP 메서드 설정
-          headers: {
-            'Content-Type': 'application/json', // 요청의 콘텐츠 타입 헤더
-          }
-        };
-
-        fetch(url, options)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
-            const subRegionElement = document.getElementById('sub_region')
-            subRegionElement.innerHTML = ''
-            const defaultOptionTag = document.createElement('option')
-            defaultOptionTag.textContent = 'Select'
-            subRegionElement.appendChild(defaultOptionTag)
-            data.data.forEach((item, idx) => {
-              const optionElement = document.createElement('option')
-              optionElement.value = idx
-              optionElement.textContent = item
-              subRegionElement.appendChild(optionElement)
-            });
-          })
-          .catch(error => console.error('Error:', error));
-      }
-    </script>
+    <script src="./custom/login_shield.js"></script>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -548,6 +517,7 @@
                                 id="kt_form"
                                 enctype="multipart/form-data"
                               >
+                                <input type="hidden" id="stadium_id">
                                 <div class="row justify-content-center">
                                   <div class="col-xl-9">
                                     <!--begin::Wizard Step 1-->
@@ -569,6 +539,7 @@
                                           >
                                             <div
                                               class="image-input-wrapper"
+                                              id="photo_path"
                                               style="background-image: url()"
                                             ></div>
                                             <label
@@ -584,6 +555,7 @@
                                               <input
                                                 type="file"
                                                 name="photo"
+                                                id="photo"
                                                 accept=".png, .jpg, .jpeg"
                                               />
                                               <!-- <input
@@ -642,8 +614,9 @@
                                           <input
                                             class="form-control form-control-solid form-control-lg"
                                             name="stadium_name"
+                                            id="stadium_name"
                                             type="text"
-                                            value="서울 강동 송파 풋살파크"
+                                            value=""
                                             placeholder="예 : 서울 노원 RC 풋살 스타디움"
                                           />
                                         </div>
@@ -659,8 +632,9 @@
                                           <input
                                             class="form-control form-control-solid form-control-lg"
                                             name="full_address"
+                                            id="full_address"
                                             type="text"
-                                            value="서울특별시 송파구 송파로 615-48 8층"
+                                            value=""
                                             placeholder="예 : 서울특별시 노원구 노원로238 4층"
                                           />
                                         </div>
@@ -685,8 +659,10 @@
                                               type="number"
                                               class="form-control form-control-solid form-control-lg"
                                               name="contact_phone"
-                                              value="01011111111"
+                                              id="contact_phone"
+                                              value=""
                                               placeholder="대쉬(-)없이 숫자만 입력해주세요"
+                                              maxlength="11"
                                             />
                                           </div>
                                           <!-- <span class="form-text text-muted"
@@ -717,8 +693,9 @@
                                               type="text"
                                               class="form-control form-control-solid form-control-lg"
                                               name="contact_email"
+                                              id="contact_email"
                                               placeholder="구장주님의 Email을 입력해주세요"
-                                              value="asg1111@gmail.com"
+                                              value=""
                                             />
                                           </div>
                                           <div
@@ -734,7 +711,7 @@
                                             <label class="col-xl-4 col-lg-4 col-form-label">구장 가로 길이</label>
                                             <div class="col-lg-8 col-xl-8">
                                               <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="width" type="number" value="18" />
+                                                <input class="form-control form-control-solid form-control-lg" name="width" id="width" type="number" value="" />
                                               </div>
                                               <div class="fv-plugins-message-container"></div>
                                             <div class="fv-plugins-message-container"></div></div>
@@ -745,7 +722,7 @@
                                             <label class="col-xl-4 col-lg-4 col-form-label">구장 세로 길이</label>
                                             <div class="col-lg-8 col-xl-8">
                                               <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="height" type="number" value="30" />
+                                                <input class="form-control form-control-solid form-control-lg" name="height" id="height" type="number" value="" />
                                               </div>
                                               <div class="fv-plugins-message-container"></div>
                                             <div class="fv-plugins-message-container"></div></div>
@@ -962,10 +939,11 @@
                                     <div class="d-flex justify-content-end">
                                       <button
                                         type="submit"
-                                        class="btn btn-success font-weight-bolder px-10 py-3"
+                                        id="submit_btn"
+                                        class="btn btn-success font-weight-bolder px-10 py-3 ml-3"
                                       >
                                         Submit
-                                        <span class="svg-icon svg-icon-md ml-3">
+                                        <span class="svg-icon svg-icon-md ml-2">
                                           <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Check.svg-->
                                           <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -1063,208 +1041,6 @@
     <!--begin::Sticky Toolbar-->
     <!--end::Sticky Toolbar-->
     <!--begin::Demo Panel-->
-    <div id="kt_demo_panel" class="offcanvas offcanvas-right p-10">
-      <!--begin::Header-->
-      <div
-        class="offcanvas-header d-flex align-items-center justify-content-between pb-7"
-      >
-        <h4 class="font-weight-bold m-0">Select A Demo</h4>
-        <a
-          href="#"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          id="kt_demo_panel_close"
-        >
-          <i class="ki ki-close icon-xs text-muted"></i>
-        </a>
-      </div>
-      <!--end::Header-->
-      <!--begin::Content-->
-      <div class="offcanvas-content">
-        <!--begin::Wrapper-->
-        <div class="offcanvas-wrapper mb-5 scroll-pull">
-          <h5 class="font-weight-bold mb-4 text-center">Demo 1</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo1.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo1/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo1/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 2</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo2.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo2/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo2/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 3</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo3.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo3/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo3/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 4</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo4.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo4/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo4/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 5</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo5.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo5/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo5/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 6</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo6.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo6/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo6/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 7</h5>
-          <div
-            class="overlay rounded-lg mb-8 offcanvas-demo offcanvas-demo-active"
-          >
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo7.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="../../../../../demo7/dist"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >HTML</a
-              >
-              <a
-                href="https://preview.keenthemes.com/keen/demo7/rtl/index.html"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow"
-                target="_blank"
-                >RTL</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 8</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo8.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="#"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow disabled opacity-90"
-                >Coming soon</a
-              >
-            </div>
-          </div>
-          <h5 class="font-weight-bold mb-4 text-center">Demo 9</h5>
-          <div class="overlay rounded-lg mb-8 offcanvas-demo">
-            <div class="overlay-wrapper rounded-lg">
-              <img src="assets/media/demos/demo9.png" alt="" class="w-100" />
-            </div>
-            <div class="overlay-layer">
-              <a
-                href="#"
-                class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow disabled opacity-90"
-                >Coming soon</a
-              >
-            </div>
-          </div>
-        </div>
-        <!--end::Wrapper-->
-        <!--begin::Purchase-->
-        <div class="offcanvas-footer">
-          <a
-            href="https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/"
-            target="_blank"
-            class="btn btn-block btn-danger btn-shadow font-weight-bolder text-uppercase"
-            >Buy Keen Now!</a
-          >
-        </div>
-        <!--end::Purchase-->
-      </div>
-      <!--end::Content-->
-    </div>
     <!--end::Demo Panel-->
     <script>
       var HOST_URL = "https://preview.keenthemes.com/keen/theme/tools/preview";
@@ -1333,6 +1109,87 @@
     <!--begin::Page Scripts(used by this page)-->
     <script src="assets/js/pages/custom/user/add-user.js"></script>
     <!--end::Page Scripts-->
+
+    <!-- 사용자 정의 javascript -->
+    <script>
+      // 하위 지역 전역 변수
+      let g_sub_region_value = 0;
+
+      /* 메인 지역 변경시 하위 지역 리스트 변경하는 onchange 함수 */
+      function mainRegionChange(e){
+          const url = 'http://127.0.0.1:7070/stadium/subRegion/'+e.target.value;
+          const options = {
+              method: 'GET', // HTTP 메서드 설정
+              headers: {
+              'Content-Type': 'application/json', // 요청의 콘텐츠 타입 헤더
+              }
+          };
+
+          fetch(url, options)
+              .then(response => response.json())
+              .then(data => {
+              console.log('main_region onchange fetch response: ', data)
+              const subRegionElement = document.getElementById('sub_region')
+              subRegionElement.innerHTML = ''
+              const defaultOptionTag = document.createElement('option')
+              defaultOptionTag.textContent = 'Select'
+              subRegionElement.appendChild(defaultOptionTag)
+              data.data.forEach((item, idx) => {
+                  const optionElement = document.createElement('option')
+                  optionElement.value = idx
+                  optionElement.textContent = item
+                  subRegionElement.appendChild(optionElement)
+              });
+              if(g_sub_region_value > 0){
+                  document.getElementById('sub_region').value = g_sub_region_value;
+                  g_sub_region_value = 0;
+              }
+              })
+              .catch(error => console.error('Error:', error));
+      }
+
+      /* ejs파라미터를 화면에 뿌려주는 코드 */
+      const stadium_data = <%- JSON.stringify(data) %>;
+      console.log('stadium_data: ', stadium_data);
+      
+      // data가 있을 때만 input들에 값 할당
+      if(stadium_data){
+        const keyArray = Object.keys(stadium_data);
+        keyArray.forEach(key => {
+          const input_object = document.getElementById(key);
+
+          // photo_path인 경우 value가 아니라 style로 사진경로 부여
+          if(input_object && key === 'photo_path') input_object.style = `background-image: url(${stadium_data[key]})`
+          
+          // 메인지역의 경우 설정했을 때 서브지역이 업데이트 되도록 onchange 발생시키기
+          else if(input_object && key === 'main_region') {
+            input_object.value = stadium_data[key];
+            var event = new Event('change', {
+              bubbles: true,    // 이벤트가 버블링되도록 설정
+              cancelable: true,  // 이벤트를 취소할 수 있도록 설정
+            });
+            g_sub_region_value = stadium_data['sub_region']
+            input_object.dispatchEvent(event);
+          }
+
+          // getElementById로 검색되는 일반적인 input에 값 대입
+          else if(input_object) input_object.value = stadium_data[key];
+
+          // id값을 hidden input에 할당
+          else if (!input_object && key === 'id') document.getElementById('stadium_id').value = stadium_data[key];
+
+          // radio 버튼인 경우
+          else if(!input_object){
+            const radio_list = document.getElementsByName(key)
+            if(radio_list.length > 0){
+              radio_list.forEach(element => {
+                if(element.value == stadium_data[key]) element.checked = true
+              })
+            }
+          }
+        })
+      }
+    </script>
   </body>
   <!--end::Body-->
 </html>

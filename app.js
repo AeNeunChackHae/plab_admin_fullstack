@@ -6,6 +6,7 @@ import managerRouter from "./router/manager.js";
 import stadiumRouter from "./router/stadium.js";
 import noticeRouter from "./router/notice.js";
 import qnaRouter from "./router/qna.js";
+import { config } from './config.js'
 import cors from "cors";
 import path from "path";
 
@@ -49,4 +50,4 @@ app.use("*", (req, res, next) => {
 });
 
 // 서버 호스팅
-const server = app.listen(8080);
+const server = app.listen(config.hosting_port.admin_full);

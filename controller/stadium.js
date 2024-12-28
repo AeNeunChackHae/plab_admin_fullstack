@@ -8,34 +8,64 @@ const data_object = {
   regist_url:"/stadium/regist",
   main_region:"",
   sub_region:"",
+  data:{},
 }
 
 // 구장 등록
 export async function registPage(req, res, next) {
-  data_object.sub_title = '구장 등록'
-  data_object.main_region = config.region.main_region_code
+  const data_object = {
+    page_title:"구장",
+    sub_title:'구장 등록',
+    main_region:config.region.main_region_code,
+    sub_region:"",
+    data:{},
+  }
 
   res.render("stadium_detail", data_object);
 }
 
 // 구장 수정
 export async function editPage(req, res, next) {
-  data_object.sub_title = '구장 수정'
+  const data_object = {
+    page_title:"구장",
+    sub_title:'구장 수정',
+    main_region:config.region.main_region_code,
+    sub_region:"",
+    data:{},
+  }
 
+  // 해당 구장 정보 조회
+  const stadium_id = parseInt(req.params.id, 10);
+  const stadium_data = await stadiumRepository.getStadiumOneById(stadium_id);
+  if(!stadium_data) res.render('error', {error:'잘못된 접근입니다.'});
+  else data_object.data = stadium_data;
+
+  // 기타 리소스
+  data_object.sub_title = '구장 수정';
+  data_object.main_region = config.region.main_region_code;
+
+  // 랜더링 명령
+  console.log('수정 창 랜더링 전 data_object: ', data_object);
   res.render("stadium_detail", data_object);
 }
 
 // 구장 목록
 export async function stadiumList(req, res, next) {
-  data_object.sub_title = '구장 목록'
+  const data_object = {
+    page_title:"구장",
+    sub_title:'구장 목록',
+    // regist_url:"/stadium/regist",
+    main_region:config.region.main_region_code,
+    sub_region:"",
+  }
 
   // 모든 운영중인 구장 Select
   const objectList = await stadiumRepository.getAllOperatingStadium()
 
   // 숫자코드 값 config에서 해당 값으로 변환  (0 -> 서울, 1 -> 부산)
   objectList.map(row => {
-    row.지역 = config.region.main_region_code[row.지역]
-    row.구장타입 = config.stadium_match.ground_type_code[row.구장타입]
+    row.main_region = config.region.main_region_code[row.main_region]
+    row.ground_type = config.stadium_match.ground_type_code[row.ground_type]
   })
   data_object.objectList = objectList
 
@@ -44,7 +74,14 @@ export async function stadiumList(req, res, next) {
 
 // 제휴 요청 목록
 export async function waitStadiumList(req, res, next) {
-  data_object.sub_title = '제휴 요청 목록'
+  const data_object = {
+    page_title:"구장",
+    sub_title:'제휴 요청 목록',
+    regist_url:"/stadium/regist",
+    main_region:config.region.main_region_code,
+    sub_region:"",
+    data:{},
+  }
 
   res.render("list_page", data_object);
 }

@@ -8,7 +8,7 @@ router.get("/", stadiumController.stadiumList);
 
 router.get("/regist", stadiumController.registPage);
 
-router.get("/edit", stadiumController.editPage);
+router.get("/edit/:id", stadiumController.editPage);
 
 router.post("/regist", fileUpload.fileUpload, fileUpload.aws_s3_upload, stadiumController.create);
 
