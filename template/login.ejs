@@ -60,7 +60,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
         if (confirm("로그아웃 하시겠습니까?")) {
           localStorage.removeItem("authToken");
         } else {
-          location.href = "/";
+          window.history.back();
         }
       }
 
@@ -84,7 +84,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           return
         }
 
-        fetch("/auth/login", {
+        fetch("http://127.0.0.1:7070/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
