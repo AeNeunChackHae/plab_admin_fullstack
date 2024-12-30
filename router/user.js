@@ -1,17 +1,10 @@
 import express from "express";
+import * as userController from '../controller/user.js';
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.render("list_page", {
-    page_title: "사용자",
-    table_title: "사용자 목록",
-    regist_url: "/user/regist",
-  });
-});
+router.get("/", userController.userList);
 
-router.get("/regist", (req, res, next) => {
-  res.render("detail_page", { page_title: "사용자" });
-});
+router.get("/regist");
 
 export default router;

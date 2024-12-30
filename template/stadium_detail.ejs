@@ -512,13 +512,11 @@
                             <div class="col-xl-12 col-xxl-10">
                               <!--begin::Wizard Form-->
                               <form
-                                method="post"
-                                action="/stadium/regist"
                                 class="form"
                                 id="kt_form"
                                 enctype="multipart/form-data"
                               >
-                                <input type="hidden" id="stadium_id">
+                                <input type="hidden" id="stadium_id" name="stadium_id">
                                 <div class="row justify-content-center">
                                   <div class="col-xl-9">
                                     <!--begin::Wizard Step 1-->
@@ -1169,7 +1167,7 @@
               bubbles: true,    // 이벤트가 버블링되도록 설정
               cancelable: true,  // 이벤트를 취소할 수 있도록 설정
             });
-            g_sub_region_value = stadium_data['sub_region']
+            g_sub_region_value = stadium_data['sub_region'];
             input_object.dispatchEvent(event);
           }
 
@@ -1190,6 +1188,46 @@
           }
         })
       }
+
+      /* form submit 등록/수정 분기 처리 */
+      document.getElementById('kt_form').addEventListener('submit', function(event) {
+        
+        // 기본 제출 동작 예방
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        formData.append('requestTable', 'stadium');
+        // FormData의 내용을 로깅
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
+        let target_url = "";
+
+        // stadium_id 유무에 따라 url을 등록/수정 분기하여 요청청
+        const stadium_id = document.getElementById('stadium_id').value;
+        if(stadium_id){
+          target_url = `http://127.0.0.1:7070/stadium/edit/${stadium_id}`
+        }else{
+          target_url = `http://127.0.0.1:7070/stadium/regist`
+        }
+        console.log('target_url: ', target_url)
+
+        fetch(target_url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('response data: ', data);
+          // status : true 응답일 때
+          if(data.status) location.href = `${data.url}`
+          // status : false 응답일 때
+          else alert('예외가 발생했습니다!\n'+data.error)
+        })
+        .catch(error => console.error('Error:', error));
+      });
     </script>
   </body>
   <!--end::Body-->

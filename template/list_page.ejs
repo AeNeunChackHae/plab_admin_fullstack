@@ -485,11 +485,11 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                   <!--end::Header-->
                   <!--begin::Body-->
                   <div class="card-body">
-                    <div id="tabulator_container"></div>
+                    <div id="tabulator_container" style="font-family: 'Roboto', sans-serif;"></div>
                     <div class="d-flex justify-content-end mt-5">
                       <div class="card-toolbar">
                         <!--begin::Button-->
-                        <a href="/stadium/regist" class="btn btn-primary font-weight-bolder">
+                        <a href=<%= regist_url %> class="btn btn-primary font-weight-bolder">
                           <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -1027,13 +1027,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
         layout : "fitColumns",
         pagination:"local", //enable local pagination.
         paginationSize:10, // 한 페이지에 5개의 결과 표시
-        columns:[
-          {title:'id', field:'id', visible:false},
-          {title:'지역', field:'main_region'},
-          {title:'구장이름', field:'stadium_name'},
-          {title:'휴대폰', field:"contact_phone"},
-          {title:'구장타입', field:'ground_type'}
-        ]
+        columns:<%- JSON.stringify(tabulator_config) %>
       });
       table.on("rowClick", function(e, row){ 
         console.log('clicked row data: ', row.getData())
