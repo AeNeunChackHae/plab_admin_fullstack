@@ -1,18 +1,12 @@
 import express from "express";
-// import auth from '../middleware/auth.js';
+import * as qnaController from '../controller/qna.js';
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.render("list_page", {
-    page_title: "QnA",
-    table_title: "QnA 목록",
-    regist_url: "/qna/regist",
-  });
-});
+// qna 페이지
+router.get("/", qnaController.qnaList);
 
-router.get("/regist", (req, res, next) => {
-  res.render("detail_page", { page_title: "QnA" });
-});
+// qna등록 페이지
+router.get("/regist");
 
 export default router;

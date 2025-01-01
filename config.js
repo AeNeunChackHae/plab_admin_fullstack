@@ -96,6 +96,7 @@ export const config = {
     region_busan_code: getEnvValue("REGION_BUSAN_CODE"),
     region_seoul_code: getEnvValue("REGION_SEOUL_CODE"),
   },
+  
   manager: {
     manager_status_code: getEnvValue("MANAGER_STATUS_CODE"),
   },
