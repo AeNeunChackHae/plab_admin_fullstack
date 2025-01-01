@@ -1,6 +1,6 @@
 import express from "express";
 import { config } from "../config.js";
-import * as qnaRepository from '../data/qna.js'
+import * as qnaRepository from '../data/qna.js';
 
 /* QnA 리스트 페이지 */
 export async function qnaList(req, res, next) {
@@ -9,6 +9,7 @@ export async function qnaList(req, res, next) {
     sub_title:'QnA 목록',
     regist_url:"/qna/regist",
     edit_url:"/qna/edit/",
+    regist_visible:false,
     filter_column: "title",
     tabulator_config:[
         {title:'id', field:'id', visible:false},
@@ -31,56 +32,33 @@ export async function qnaList(req, res, next) {
 
 
 
+/* QnA 수정 페이지 */
+export async function editPage(req, res, next) {
+  const qna_id = parseInt(req.params.id, 10);
+  const qna_data = await qnaRepository.getQnaOneById(qna_id);
 
-// /* 구장 등록 로직 */
-// export async function create(req, res, next) {
-//   const formData = req.body;
-//   const awsUploadPath = req.awsUploadPath;
+  // QnA 데이터가 없을 경우
+  if (!qna_data) {
+    res.render('error', { error: '잘못된 접근입니다.' });
+  } else {
+    const data_object = {
+      page_title: "QnA",
+      sub_title: 'QnA 수정',
+      data: qna_data
+    };
+    res.render("qna_detail", data_object);  // qna_detail.ejs로 데이터 전달
+  }
+}
 
-//   formData["photo_path"] = awsUploadPath;
-//   const insertResultId = await stadiumRepository.insertStadium(formData);
+/* QnA 수정 로직 */
+export async function update(req, res, next) {
+  const formData = req.body;
 
-//   // 정상 등록
-//   if(insertResultId) {
-//     let flag = false;
-//     const config_keys = ['match_type_', 'allow_gender_', 'level_criterion_', 'match_start_time_'];
-//     const config_data_arr = [];
-//     while(true){
-//       let num = 0;
-//       const sql_param = { 'stadium_id':insertResultId }
+  const updateResult = await qnaRepository.updateQna(formData);
 
-//       // match_type_(num)이 formData에 존재하는지 확인
-//       config_keys.forEach(item => {
-//         let name_attribute = item+num // 'match_type_0' ... 'allow_gender_0' ... 
-
-//         // 존재하는 경우
-//         if(name_attribute in formData){
-          
-//           let columnName = item.slice(0, -1);
-//           sql_param[columnName] = formData[name_attribute]  // sql_param에 'match_type : 1' 저장
-        
-//         // 없는 경우
-//         }else{
-//           flag = true;
-//         }
-//       })
-
-//       // num번 매치 설정이 없던 경우 (종료)
-//       if(flag) break;
-
-//       // num번 매치 설정이 있던 경우 (다음 매치 설정도 확인)
-//       else {
-//         config_data_arr.push(sql_param);
-//         console.log('config_data_arr: ', config_data_arr);
-//         num += 1;
-//       }
-//     }
-
-//     const insertAffectedRows = await stadiumRepository.insertStadiumConfig(config_data_arr);
-
-//     if(insertAffectedRows > 0) res.json({status:true, url:'/stadium'});
-//     else res.json({status:false, error:'----- config insert affectedRows is 0 -----'});
-//   }
-//   // INSERT 쿼리 중 에러 발생
-//   else res.json({status:false})
-// }
+  if (updateResult) {
+    res.json({ status: true, url: '/qna' });  // 수정 성공 후 목록으로 리다이렉트
+  } else {
+    res.json({ status: false, error: 'update query exception 발생' });
+  }
+}

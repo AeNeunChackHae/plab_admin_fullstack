@@ -296,7 +296,7 @@
             aria-haspopup="true"
             data-menu-toggle="hover"
           >
-            <a href="/stadium" class="menu-link menu-toggle">
+            <a href="/qna" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                 <!--begin::Svg Icon | path:/assets/media/svg/icons/Shopping/Barcode-read.svg-->
                 <svg
@@ -333,48 +333,6 @@
                 <!--end::Svg Icon-->
               </span>
               <span class="menu-text">구장 관리</span>
-            </a>
-          </li>
-          <li
-            class="menu-item menu-item-submenu"
-            aria-haspopup="true"
-            data-menu-toggle="hover"
-          >
-            <a href="/notice" class="menu-link menu-toggle">
-              <span class="svg-icon menu-icon">
-                <!--begin::Svg Icon | path:/assets/media/svg/icons/Shopping/Barcode-read.svg-->
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  version="1.1"
-                >
-                  <g
-                    stroke="none"
-                    stroke-width="1"
-                    fill="none"
-                    fill-rule="evenodd"
-                  >
-                    <rect x="0" y="0" width="24" height="24" />
-                    <path
-                      d="M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z"
-                      fill="#000000"
-                      fill-rule="nonzero"
-                      transform="translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953) "
-                    />
-                    <path
-                      d="M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z"
-                      fill="#000000"
-                      fill-rule="nonzero"
-                      opacity="0.3"
-                    />
-                  </g>
-                </svg>
-                <!--end::Svg Icon-->
-              </span>
-              <span class="menu-text">공지사항</span>
             </a>
           </li>
           <li
@@ -516,7 +474,7 @@
                                 id="kt_form"
                                 enctype="multipart/form-data"
                               >
-                                <input type="hidden" id="stadium_id" name="stadium_id">
+                                <input type="hidden" id="qna_id" name="qna_id">
                                 <div class="row justify-content-center">
                                   <div class="col-xl-9">
                                     <!--begin::Wizard Step 1-->
@@ -526,343 +484,77 @@
                                       data-wizard-state="current"
                                     >
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label text-left"
-                                          >구장 사진</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <div
-                                            class="image-input image-input-outline"
-                                            id="kt_user_add_avatar"
-                                          >
-                                            <div
-                                              class="image-input-wrapper"
-                                              id="photo_path"
-                                              style="background-image: url()"
-                                            ></div>
-                                            <label
-                                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                                              data-action="change"
-                                              data-toggle="tooltip"
-                                              title=""
-                                              data-original-title="Change avatar"
-                                            >
-                                              <i
-                                                class="fa fa-pen icon-sm text-muted"
-                                              ></i>
-                                              <input
-                                                type="file"
-                                                name="photo"
-                                                id="photo"
-                                                accept=".png, .jpg, .jpeg"
-                                              />
-                                              <!-- <input
-                                                type="hidden"
-                                                name="photo_remove"
-                                              /> -->
-                                            </label>
-                                            <span
-                                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                                              data-action="cancel"
-                                              data-toggle="tooltip"
-                                              title="Cancel avatar"
-                                            >
-                                              <i
-                                                class="ki ki-bold-close icon-xs text-muted"
-                                              ></i>
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 상태</label>
-                                        <div class="col-lg-9 col-xl-9">
-                                          <select id="status_code" name="status_code" class="form-control form-control-solid form-control-lg">
-                                            <option value="">Select</option>
-                                            <option value=0>승인 대기</option>
-                                            <option value=1>정상 운영</option>
-                                            <option value=2>미운영</option>
-                                          </select>
-                                        </div>
-                                      </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 타입</label>
-                                        <div class="col-lg-9 col-xl-9">
-                                          <select id="ground_type" name="ground_type" class="form-control form-control-solid form-control-lg">
-                                            <option value="">Select</option>
-                                            <option value=0>인조잔디</option>
-                                            <option value=1>천연잔디</option>
-                                            <option value=2>인도어</option>
-                                            <option value=3>맨땅</option>
-                                          </select>
-                                        </div>
-                                      </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <div class="form-group row">
+                                      <div class="form-group">
                                         <label
                                           class="col-xl-3 col-lg-3 col-form-label"
-                                          >구장 이름</label
+                                          style="padding-left: 0px;"
+                                          >문의자</label
                                         >
-                                        <div class="col-lg-9 col-xl-9">
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
                                           <input
                                             class="form-control form-control-solid form-control-lg"
-                                            name="stadium_name"
-                                            id="stadium_name"
+                                            name="username"
+                                            id="username"
                                             type="text"
                                             value=""
-                                            placeholder="예 : 서울 노원 RC 풋살 스타디움"
+                                            readonly
                                           />
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label"
-                                          >주소</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <input
-                                            class="form-control form-control-solid form-control-lg"
-                                            name="full_address"
-                                            id="full_address"
-                                            type="text"
-                                            value=""
-                                            placeholder="예 : 서울특별시 노원구 노원로238 4층"
-                                          />
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div
-                                        class="form-group row fv-plugins-icon-container"
-                                      >
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label"
-                                          >이메일</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <div
-                                            class="input-group input-group-solid input-group-lg"
-                                          >
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                <i class="la la-at"></i>
-                                              </span>
-                                            </div>
-                                            <input
-                                              type="text"
-                                              class="form-control form-control-solid form-control-lg"
-                                              name="contact_email"
-                                              id="contact_email"
-                                              placeholder="구장주님의 Email을 입력해주세요"
-                                              value=""
-                                            />
-                                          </div>
-                                          <div
-                                            class="fv-plugins-message-container"
-                                          ></div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <div class="col-lg-6">
-                                          <div class="form-group row fv-plugins-icon-container">
-                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 가로 길이</label>
-                                            <div class="col-lg-8 col-xl-8">
-                                              <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="width" id="width" type="number" value="" />
-                                              </div>
-                                              <div class="fv-plugins-message-container"></div>
-                                            <div class="fv-plugins-message-container"></div></div>
-                                          </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <div class="form-group row fv-plugins-icon-container">
-                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 세로 길이</label>
-                                            <div class="col-lg-8 col-xl-8">
-                                              <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="height" id="height" type="number" value="" />
-                                              </div>
-                                              <div class="fv-plugins-message-container"></div>
-                                            <div class="fv-plugins-message-container"></div></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <div class="col-lg-6">
-                                          <label>주소 대분류</label>
-                                          <select
-                                            id="main_region"
-                                            name="main_region"
-                                            class="form-control form-control-solid form-control-lg"
-                                            onchange="mainRegionChange(event)"
-                                          >
-                                            <option value="">Select</option>
-                                            <% main_region.forEach(function(item, idx) { %>
-                                              <option value="<%= idx %>"><%= item %></option>
-                                            <% }); %>
-                                          </select>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <label>주소 소분류</label>
-                                          <select
-                                            id="sub_region"
-                                            name="sub_region"
-                                            class="form-control form-control-solid form-control-lg"
-                                          >
-                                            <option value="">Select</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
-                                          >샤워실</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="shower_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="shower_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
-                                        </div>
-                                        <label class="col-2 col-form-label"
-                                          >음료 판매</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                              <input type="radio" name="sell_drink_yn" value="Y">
-                                              <span></span>Y</label>
-                                              <label class="radio radio-primary">
-                                              <input type="radio" name="sell_drink_yn" checked="checked" value="N">
-                                              <span></span>N</label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
-                                          >풋살화 대여</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_shoes_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_shoes_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
-                                        </div>
-                                        <label class="col-2 col-form-label"
-                                          >화장실</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                              <input type="radio" name="toilet_yn" value="Y">
-                                              <span></span>Y</label>
-                                              <label class="radio radio-primary">
-                                              <input type="radio" name="toilet_yn" checked="checked" value="N">
-                                              <span></span>N</label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
-                                          >주차 가능 여부</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="parking_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="parking_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group">
-                                        <label for="exampleTextarea">구장 특이사항</label>
-                                        <textarea class="form-control form-control-solid" rows="3" id="notice" name="notice" style="max-height: 300px;"></textarea>
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >질문</label
+                                        >
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="title"
+                                            id="title"
+                                            type="text"
+                                            value=""
+                                            readonly
+                                          />
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label for="exampleTextarea">문의 내용</label>
+                                        <textarea class="form-control form-control-solid" rows="3" id="content" name="content" style="height: 300px;" readonly></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="exampleTextarea">답변</label>
+                                        <textarea class="form-control form-control-solid" rows="3" id="answer" name="answer" style="height: 300px;"></textarea>
                                       </div>
                                     </div>
                                     <!--end::Group-->
 
                                     <!--begin::Group-->
-                                    <div class="row">
-                                      <div class="col-lg-3">
-                                        <label>매치 시간</label>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <label>매치 타입</label>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <label>성별 구분</label>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <label>레벨 제한</label>
-                                      </div>
-                                    </div>
-                                    <% match_config_arr.forEach((time, idx) => { %>
-                                    <div id="match_config_container" class="form-group row">
-                                      <div class="col-lg-3">
-                                        <input type="text" readonly id="match_start_time_<%= idx %>" name="match_start_time_<%= idx %>" value="<%= time %>" class="form-control form-control-solid form-control-lg">
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="match_type_<%= idx %>" name="match_type_<%= idx %>" onchange="" class="form-control form-control-solid form-control-lg">
-                                          <% match_type_arr.forEach((type_item, type_idx) => { %>
-                                          <option value="<%= type_idx %>"><%= type_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="allow_gender_<%= idx %>" name="allow_gender_<%= idx %>" class="form-control form-control-solid form-control-lg">
-                                          <% match_gender_arr.forEach((gender_item, gender_idx) => { %>
-                                            <option value="<%= gender_idx %>"><%= gender_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="level_criterion_<%= idx %>" name="level_criterion_<%= idx %>" class="form-control form-control-solid form-control-lg">
-                                          <% match_level_arr.forEach((level_item, level_idx) => { %>
-                                            <option value="<%= level_idx %>"><%= level_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <% }); %>
+
                                     <!--end::Group-->
 
                                     <!--end::Wizard Step 1-->
@@ -1093,82 +785,17 @@
 
     <!-- 사용자 정의 javascript -->
     <script>
-      // 하위 지역 전역 변수
-      let g_sub_region_value = 0;
-
-      /* 메인 지역 변경시 하위 지역 리스트 변경하는 onchange 함수 */
-      function mainRegionChange(e){
-          const url = 'http://127.0.0.1:7070/stadium/subRegion/'+e.target.value;
-          const options = {
-              method: 'GET', // HTTP 메서드 설정
-              headers: {
-              'Content-Type': 'application/json', // 요청의 콘텐츠 타입 헤더
-              }
-          };
-
-          fetch(url, options)
-              .then(response => response.json())
-              .then(data => {
-              console.log('main_region onchange fetch response: ', data)
-              const subRegionElement = document.getElementById('sub_region')
-              subRegionElement.innerHTML = ''
-              const defaultOptionTag = document.createElement('option')
-              defaultOptionTag.textContent = 'Select'
-              subRegionElement.appendChild(defaultOptionTag)
-              data.data.forEach((item, idx) => {
-                  const optionElement = document.createElement('option')
-                  optionElement.value = idx
-                  optionElement.textContent = item
-                  subRegionElement.appendChild(optionElement)
-              });
-              if(g_sub_region_value > 0){
-                  document.getElementById('sub_region').value = g_sub_region_value;
-                  g_sub_region_value = 0;
-              }
-              })
-              .catch(error => console.error('Error:', error));
-      }
-
       /* ejs파라미터를 화면에 뿌려주는 코드 */
       const qna_data = <%- JSON.stringify(data) %>;
       console.log('qna_data: ', qna_data);
       
       // data가 있을 때만 input들에 값 할당
-      if(stadium_data){
-        const keyArray = Object.keys(qna_data);
-        keyArray.forEach(key => {
-          const input_object = document.getElementById(key);
-
-          // photo_path인 경우 value가 아니라 style로 사진경로 부여
-          if(input_object && key === 'photo_path') input_object.style = `background-image: url(${stadium_data[key]})`
-          
-          // 메인지역의 경우 설정했을 때 서브지역이 업데이트 되도록 onchange 발생시키기
-          else if(input_object && key === 'main_region') {
-            input_object.value = stadium_data[key];
-            var event = new Event('change', {
-              bubbles: true,    // 이벤트가 버블링되도록 설정
-              cancelable: true,  // 이벤트를 취소할 수 있도록 설정
-            });
-            g_sub_region_value = stadium_data['sub_region'];
-            input_object.dispatchEvent(event);
-          }
-
-          // getElementById로 검색되는 일반적인 input에 값 대입
-          else if(input_object) input_object.value = stadium_data[key];
-
-          // id값을 hidden input에 할당
-          else if (!input_object && key === 'id') document.getElementById('qna_id').value = qna_data[key];
-
-          // radio 버튼인 경우
-          else if(!input_object){
-            const radio_list = document.getElementsByName(key)
-            if(radio_list.length > 0){
-              radio_list.forEach(element => {
-                if(element.value == qna_data[key]) element.checked = true
-              })
-            }
-          }
-        })
+      if(qna_data){
+        document.getElementById('qna_id').value = qna_data.id;
+        document.getElementById('username').value = qna_data.username;
+        document.getElementById('title').value = qna_data.title;
+        document.getElementById('content').value = qna_data.content;
+        document.getElementById('answer').value = qna_data.answer;
       }
 
       /* form submit 등록/수정 분기 처리 */
@@ -1179,7 +806,7 @@
 
         const form = event.target;
         const formData = new FormData(form);
-        formData.append('requestTable', 'stadium');
+        formData.append('requestTable', 'qna');
         // FormData의 내용을 로깅
         for (let [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
@@ -1187,13 +814,9 @@
 
         let target_url = "";
 
-        // stadium_id 유무에 따라 url을 등록/수정 분기하여 요청청
+        // qna_id 유무에 따라 url을 등록/수정 분기하여 요청청
         const qna_id = document.getElementById('qna_id').value;
-        if(qna_id){
-          target_url = `http://127.0.0.1:7070/qna/edit/${qna_id}`
-        }else{
-          target_url = `http://127.0.0.1:7070/qna/regist`
-        }
+        target_url = `http://127.0.0.1:7070/qna/edit/${qna_id}`;
         console.log('target_url: ', target_url)
 
         fetch(target_url, {
@@ -1210,6 +833,8 @@
         })
         .catch(error => console.error('Error:', error));
       });
+
+
     </script>
   </body>
   <!--end::Body-->
