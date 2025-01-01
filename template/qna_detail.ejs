@@ -530,18 +530,6 @@
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
                                       <div class="form-group">
                                         <label for="exampleTextarea">문의 내용</label>
                                         <textarea class="form-control form-control-solid" rows="3" id="content" name="content" style="height: 300px;" readonly></textarea>
@@ -552,16 +540,6 @@
                                       </div>
                                     </div>
                                     <!--end::Group-->
-
-                                    <!--begin::Group-->
-
-                                    <!--end::Group-->
-
-                                    <!--end::Wizard Step 1-->
-                                    <!--begin::Wizard Step 2-->
-                                    <!--end::Wizard Step 2-->
-                                    <!--begin::Wizard Step 3-->
-                                    <!--end::Wizard Step 3-->
                                     <!--begin::Wizard Step 4-->
                                     <div
                                       class="my-5 step"
@@ -816,7 +794,7 @@
 
         // qna_id 유무에 따라 url을 등록/수정 분기하여 요청청
         const qna_id = document.getElementById('qna_id').value;
-        target_url = `http://127.0.0.1:7070/qna/edit/${qna_id}`;
+        target_url = `http://127.0.0.1:7070/qna/edit`;
         console.log('target_url: ', target_url)
 
         fetch(target_url, {

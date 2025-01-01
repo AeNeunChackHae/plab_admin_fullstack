@@ -30,8 +30,6 @@ export async function qnaList(req, res, next) {
   res.render("list_page", data_object);
 }
 
-
-
 /* QnA 수정 페이지 */
 export async function editPage(req, res, next) {
   const qna_id = parseInt(req.params.id, 10);
@@ -46,18 +44,19 @@ export async function editPage(req, res, next) {
       sub_title: 'QnA 수정',
       data: qna_data
     };
-    res.render("qna_detail", data_object);  // qna_detail.ejs로 데이터 전달
+    res.render("qna_detail", data_object);
   }
 }
 
 /* QnA 수정 로직 */
 export async function update(req, res, next) {
   const formData = req.body;
+  console.log(" controller / qna / update(formData) formData: ", formData);
 
   const updateResult = await qnaRepository.updateQna(formData);
 
   if (updateResult) {
-    res.json({ status: true, url: '/qna' });  // 수정 성공 후 목록으로 리다이렉트
+    res.json({ status: true, url: '/qna' });
   } else {
     res.json({ status: false, error: 'update query exception 발생' });
   }
