@@ -1,16 +1,27 @@
 import { db } from "../mysql.js";
 
-const select_stadium_by_statuscode = "SELECT id, main_region, stadium_name, contact_phone, ground_type FROM PFB_STADIUM WHERE STATUS_CODE = ?";
+const select_stadium_by_statuscode = "SELECT id, main_region, stadium_name, ground_type FROM PFB_STADIUM WHERE STATUS_CODE = ?";
 
 const select_stadium_by_id = "SELECT * FROM PFB_STADIUM WHERE ID = ?"
 
 const insert_stadium = `
     INSERT INTO
       PFB_STADIUM
-      (status_code, photo_path, stadium_name, full_address, contact_phone, contact_email, main_region
-      , sub_region, ground_type, parking_yn, width, height, notice, shower_yn, sell_drink_yn, lend_shoes_yn, toilet_yn, lend_vest_yn, lend_ball_yn)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (status_code, photo_path, stadium_name, full_address, contact_email, main_region
+      , sub_region, ground_type, parking_yn, width, height, notice, shower_yn, sell_drink_yn, lend_shoes_yn, toilet_yn)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
+
+const insert_stadium_config = `
+  INSERT INTO PFB_STADIUM_CONFIG (
+      stadium_id,
+      match_type,
+      allow_gender,
+      level_criterion,
+      match_start_time,
+      match_end_time
+    ) VALUES (?, ?, ?, ?, ?, ?)
+`;
 
 const update_stadium = `
   UPDATE
@@ -20,7 +31,6 @@ const update_stadium = `
     photo_path = ?,
     stadium_name = ?,
     full_address = ?,
-    contact_phone = ?,
     contact_email = ?,
     main_region = ?,
     sub_region = ?,
@@ -32,9 +42,7 @@ const update_stadium = `
     shower_yn = ?,
     sell_drink_yn = ?,
     lend_shoes_yn = ?,
-    toilet_yn = ?,
-    lend_vest_yn = ?,
-    lend_ball_yn = ?
+    toilet_yn = ?
   WHERE
     id = ?;
 `
@@ -46,7 +54,6 @@ const update_stadium_without_photo = `
     status_code = ?,
     stadium_name = ?,
     full_address = ?,
-    contact_phone = ?,
     contact_email = ?,
     main_region = ?,
     sub_region = ?,
@@ -58,9 +65,7 @@ const update_stadium_without_photo = `
     shower_yn = ?,
     sell_drink_yn = ?,
     lend_shoes_yn = ?,
-    toilet_yn = ?,
-    lend_vest_yn = ?,
-    lend_ball_yn = ?
+    toilet_yn = ?
   WHERE
     id = ?;
 `
@@ -105,7 +110,6 @@ export async function insertStadium(data){
         data.photo_path,
         data.stadium_name,
         data.full_address,
-        data.contact_phone,
         data.contact_email,
         data.main_region,
         data.sub_region,
@@ -118,13 +122,28 @@ export async function insertStadium(data){
         data.sell_drink_yn,
         data.lend_shoes_yn,
         data.toilet_yn,
-        data.lend_vest_yn,
-        data.lend_ball_yn
       ]).then(result => result[0].insertId);
   } catch (error) {
     console.log('----------insertStadium(data) error----------\n\n\n',error);
     return null;
   }
+}
+
+export async function insertStadiumConfig(data){
+  console.log('data / insertStadiumConfig(data) 인자값: \n', data);
+  try {
+    return db.execute(insert_stadium_config, [
+      data.stadium_id,
+      data.match_type,
+      data.allow_gender,
+      data.level_criterion,
+      data.match_start_time,
+      data.match_end_time
+    ]).then(result => result[0].affectedRows);
+} catch (error) {
+  console.log('----------insertStadiumConfig(data) error----------\n\n\n',error);
+  return null;
+}
 }
 
 export async function updateStadium(data){
@@ -135,7 +154,6 @@ export async function updateStadium(data){
       data.photo_path,
       data.stadium_name,
       data.full_address,
-      data.contact_phone,
       data.contact_email,
       data.main_region,
       data.sub_region,
@@ -148,8 +166,6 @@ export async function updateStadium(data){
       data.sell_drink_yn,
       data.lend_shoes_yn,
       data.toilet_yn,
-      data.lend_vest_yn,
-      data.lend_ball_yn,
       data.stadium_id  // 이 부분은 업데이트할 레코드를 식별하는 데 사용됩니다.
     ]);
 
@@ -166,7 +182,6 @@ export async function updateStadiumWithoutPhoto(data){
       data.status_code,
       data.stadium_name,
       data.full_address,
-      data.contact_phone,
       data.contact_email,
       data.main_region,
       data.sub_region,
@@ -179,8 +194,6 @@ export async function updateStadiumWithoutPhoto(data){
       data.sell_drink_yn,
       data.lend_shoes_yn,
       data.toilet_yn,
-      data.lend_vest_yn,
-      data.lend_ball_yn,
       data.stadium_id  // 이 부분은 업데이트할 레코드를 식별하는 데 사용됩니다.
     ]);
 
