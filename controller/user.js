@@ -30,15 +30,15 @@ export async function userList(req, res, next) {
   res.render("list_page", data_object);
 }
 
-/* 구장 등록 페이지 */
+/* 유저 등록 페이지 */
 export async function registPage(req, res, next) {
     const data_object = {
-        page_title:"구장",
-        sub_title:'구장 등록',
+        page_title:"사용자",
+        sub_title:'사용자 등록',
         main_region:config.region.main_region_code,
         sub_region:"",
         data:{},  // '수정페이지'에 필요한 param인데 없으면 ejs에서 error 발생
     }
 
-    res.render("stadium_detail", data_object);
+    res.render("user_detail", data_object);
 }

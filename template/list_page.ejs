@@ -996,13 +996,15 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       });
       table.on("rowClick", function(e, row){ 
         console.log('clicked row data: ', row.getData())
-        location.href = '/stadium/edit/'+row.getData().id
+        const edit_url = <%- JSON.stringify(edit_url) %>;
+        location.href = edit_url + row.getData().id
       });
 
       // 검색 필드 이벤트 리스너 설정
       document.getElementById("search_input").addEventListener("input", function(){
           let val = this.value;
-          table.setFilter("stadium_name", "like", val); // 'name' 컬럼에서 입력 값과 유사한 내용을 필터링
+          const filter_column = <%- JSON.stringify(filter_column) %>
+          table.setFilter(filter_column, "like", val); // 'name' 컬럼에서 입력 값과 유사한 내용을 필터링
       });
     </script>
     <!-- end :: TabulatorJS -->
