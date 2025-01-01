@@ -106,6 +106,8 @@ export async function fileUpload(req, res, next) {
           req.filename = req.file.originalname;
           next();
         });
+      }else{
+        next();
       }
     });
   }catch(error){

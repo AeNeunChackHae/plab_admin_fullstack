@@ -640,38 +640,6 @@
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label"
-                                          >휴대폰</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <div
-                                            class="input-group input-group-solid input-group-lg"
-                                          >
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                <i class="la la-phone"></i>
-                                              </span>
-                                            </div>
-                                            <input
-                                              type="number"
-                                              class="form-control form-control-solid form-control-lg"
-                                              name="contact_phone"
-                                              id="contact_phone"
-                                              value=""
-                                              placeholder="대쉬(-)없이 숫자만 입력해주세요"
-                                              maxlength="11"
-                                            />
-                                          </div>
-                                          <!-- <span class="form-text text-muted"
-                                            >Enter valid US phone number(e.g:
-                                            5678967456).</span
-                                          > -->
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
                                       <div
                                         class="form-group row fv-plugins-icon-container"
                                       >
@@ -828,40 +796,6 @@
                                       <!--begin::Group-->
                                       <div class="form-group row">
                                         <label class="col-2 col-form-label"
-                                          >조끼 대여</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_vest_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_vest_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
-                                        </div>
-                                        <label class="col-2 col-form-label"
-                                          >풋살공 대여</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                              <input type="radio" name="lend_ball_yn" value="Y">
-                                              <span></span>Y</label>
-                                              <label class="radio radio-primary">
-                                              <input type="radio" name="lend_ball_yn" checked="checked" value="N">
-                                              <span></span>N</label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
                                           >주차 가능 여부</label
                                         >
                                         <div
@@ -878,11 +812,59 @@
                                         </div>
                                       </div>
                                       <!--end::Group-->
+                                      <!--begin::Group-->
                                       <div class="form-group">
                                         <label for="exampleTextarea">구장 특이사항</label>
                                         <textarea class="form-control form-control-solid" rows="3" id="notice" name="notice" style="max-height: 300px;"></textarea>
                                       </div>
                                     </div>
+                                    <!--end::Group-->
+
+                                    <!--begin::Group-->
+                                    <div class="row">
+                                      <div class="col-lg-3">
+                                        <label>매치 시간</label>
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <label>매치 타입</label>
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <label>성별 구분</label>
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <label>레벨 제한</label>
+                                      </div>
+                                    </div>
+                                    <% match_config_arr.forEach((time, idx) => { %>
+                                    <div id="match_config_container" class="form-group row">
+                                      <div class="col-lg-3">
+                                        <input type="text" readonly id="match_start_time_<%= idx %>" name="match_start_time_<%= idx %>" value="<%= time %>" class="form-control form-control-solid form-control-lg">
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <select id="match_type_<%= idx %>" name="match_type_<%= idx %>" onchange="" class="form-control form-control-solid form-control-lg">
+                                          <% match_type_arr.forEach((type_item, type_idx) => { %>
+                                          <option value="<%= type_idx %>"><%= type_item %></option>
+                                          <% }); %>
+                                        </select>
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <select id="allow_gender_<%= idx %>" name="allow_gender_<%= idx %>" class="form-control form-control-solid form-control-lg">
+                                          <% match_gender_arr.forEach((gender_item, gender_idx) => { %>
+                                            <option value="<%= gender_idx %>"><%= gender_item %></option>
+                                          <% }); %>
+                                        </select>
+                                      </div>
+                                      <div class="col-lg-3">
+                                        <select id="level_criterion_<%= idx %>" name="level_criterion_<%= idx %>" class="form-control form-control-solid form-control-lg">
+                                          <% match_level_arr.forEach((level_item, level_idx) => { %>
+                                            <option value="<%= level_idx %>"><%= level_item %></option>
+                                          <% }); %>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <% }); %>
+                                    <!--end::Group-->
+
                                     <!--end::Wizard Step 1-->
                                     <!--begin::Wizard Step 2-->
                                     <!--end::Wizard Step 2-->
