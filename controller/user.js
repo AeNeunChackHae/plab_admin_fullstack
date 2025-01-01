@@ -7,7 +7,10 @@ export async function userList(req, res, next) {
   const data_object = {
     page_title:"사용자",
     sub_title:'사용자 목록',
-    regist_url:"/stadium/regist",
+    regist_url:"/user/regist",
+    edit_url:"/user/edit/",
+    regist_visible:true,
+    filter_column: "title",
     tabulator_config:[
         {title:'id', field:'id', visible:false},
         {title:'성별', field:'gender'},
