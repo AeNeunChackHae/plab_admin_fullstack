@@ -30,7 +30,7 @@ export async function managerList(req, res, next) {
   res.render("list_page", data_object);
 }
 
-/* 수정 대기 매니저 리스트 페이지 */
+/* 승인 대기 매니저 리스트 페이지 */
 export async function waitManagerList(req, res, next) {
     const data_object = {
       page_title:"매니저",

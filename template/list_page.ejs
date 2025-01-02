@@ -545,14 +545,16 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                   <!--begin::Body-->
                   <div class="card-body">
                     <div id="tabulator_container" style="font-family: 'Roboto', sans-serif;"></div>
-                    <div id="no_data_alert" class="alert alert-custom alert-white alert-shadow fade show mb-5" role="alert">
-                      <div class="alert-icon">
-                         <i class="icon-3x la fab la-dropbox"></i>
+                    <div id="no_data_alert" hidden>
+                      <div class="d-flex justify-content-center alert alert-custom alert-white alert-shadow fade show mb-5" role="alert">
+                        <div class="alert-icon">
+                          <i class="icon-3x la fab la-dropbox"></i>
+                        </div>
+                        <div style="font-size: 17px; width: 300px; overflow: hidden; text-align: center; line-height: 40px;">"조회된 데이터가 없습니다."</div>
                       </div>
-                      <div style="font-size: 17px; width: 600px; overflow: hidden; text-align: center;">"조회된 데이터가 없습니다."</div>
-                   </div>
+                    </div>
                     <div class="d-flex justify-content-end mt-5">
-                      <div class="card-toolbar" id="btn_container">
+                      <div class="card-toolbar" id="btn_container" hidden>
                         <!--begin::Button-->
                         <a href=<%= regist_url %> class="btn btn-primary font-weight-bolder">
                           <span class="svg-icon svg-icon-md">
@@ -1087,9 +1089,10 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       /* 등록 버튼 hidden 상태 */
       const btn_visible = <%- JSON.stringify(regist_visible) %>;
       if (!btn_visible) {
-        const abc = document.getElementById('btn_container')
-        abc.style.display = 'none';
-        console.log(" if (!btn_visible) : ")
+        const btn_container = document.getElementById('btn_container')
+        btn_container.hidden = true;
+      }else{
+        btn_container.hidden = false;
       }
       console.log(" btn_visible: ", btn_visible)
 

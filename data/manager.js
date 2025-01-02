@@ -16,7 +16,7 @@ export async function getAllValidUser() {
   }
 }
 
-// 수정 대기 매니저 조회
+// 승인 대기 매니저 조회
 export async function getselectValidUser() {
     const sql = `
       SELECT PFB_MANAGER.id, PFB_MANAGER.manager_name, PFB_MANAGER.phone_number, PFB_MANAGER.email,

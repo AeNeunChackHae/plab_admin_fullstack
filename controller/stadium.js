@@ -34,7 +34,7 @@ export async function stadiumList(req, res, next) {
   res.render("list_page", data_object);
 }
 
-/* 제휴 요청 목록 */
+/* 승인 대기 목록 */
 export async function waitStadiumList(req, res, next) {
   const data_object = {
     page_title:"구장",
@@ -43,12 +43,11 @@ export async function waitStadiumList(req, res, next) {
     edit_url:"/stadium/edit/",
     filter_column: "stadium_name",
     main_region:config.region.main_region_code,
-    regist_visible:true,
+    regist_visible:false,
     tabulator_config:[
       {title:'id', field:'id', visible:false},
       {title:'지역', field:'main_region'},
       {title:'구장이름', field:'stadium_name'},
-      {title:'휴대폰', field:"contact_phone"},
       {title:'구장타입', field:'ground_type'}
     ],
   }
@@ -74,7 +73,7 @@ export async function idleStadiumList(req, res, next) {
     edit_url:"/stadium/edit/",
     filter_column: "stadium_name",
     main_region:config.region.main_region_code,
-    regist_visible:true,
+    regist_visible:false,
     tabulator_config:[
       {title:'id', field:'id', visible:false},
       {title:'지역', field:'main_region'},

@@ -33,6 +33,37 @@ export async function userList(req, res, next) {
   res.render("list_page", data_object);
 }
 
+/* 탈퇴 유저 */
+export async function withdrawUserList(req, res, next) {
+  const data_object = {
+    page_title:"사용자",
+    sub_title:'탈퇴 유저 목록',
+    regist_url:"/user/regist",
+    edit_url:"/user/edit/",
+    regist_visible:false,
+    filter_column: "title",
+    tabulator_config:[
+        {title:'id', field:'id', visible:false},
+        {title:'성별', field:'gender'},
+        {title:'이름', field:'username'},
+        {title:'생년월일', field:"birth_date"},
+        {title:'번호', field:'phone_number'}
+      ]
+  }
+
+  const objectList = await userRepository.getAllWithdrawValidUser();
+  if(objectList){
+    data_object.objectList = objectList;
+
+    objectList.map(row => {
+        row.gender = config.mypage.gender_type_code[row.gender]
+    })
+  }else{
+    data_object.objectList = {}
+  }
+  res.render("list_page", data_object);
+}
+
 /* 유저 등록 페이지 */
 export async function registPage(req, res, next) {
     const data_object = {
