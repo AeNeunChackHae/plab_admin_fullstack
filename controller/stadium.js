@@ -9,10 +9,10 @@ export async function stadiumList(req, res, next) {
     page_title:"구장",
     sub_title:'구장 목록',
     regist_url:"/stadium/regist",
-    edit_url:"/stadium/edit/",
     filter_column: "stadium_name",
     main_region:config.region.main_region_code,
-    sub_region:"",
+    edit_url:"/stadium/edit/",
+    regist_visible:true,
     tabulator_config:[
       {title:'id', field:'id', visible:false},
       {title:'지역', field:'main_region'},
@@ -43,7 +43,7 @@ export async function waitStadiumList(req, res, next) {
     edit_url:"/stadium/edit/",
     filter_column: "stadium_name",
     main_region:config.region.main_region_code,
-    sub_region:"",
+    regist_visible:true,
     tabulator_config:[
       {title:'id', field:'id', visible:false},
       {title:'지역', field:'main_region'},
