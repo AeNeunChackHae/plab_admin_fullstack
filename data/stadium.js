@@ -83,6 +83,16 @@ export async function getAllWaitStadium() {
   }
 }
 
+/* SELECT 구장리스트 (by.미운영영) */
+export async function getAllIdleStadium() {
+  try{
+    return db.execute(select_stadium_by_statuscode, [2]).then((result) => result[0]);
+  }catch(error){
+    console.log('----------getAllIdleStadium() error----------\n\n\n',error);
+    return null;
+  }
+}
+
 /* SELECT 구장 (by.id) */
 export async function getStadiumOneById(id){
   try{
