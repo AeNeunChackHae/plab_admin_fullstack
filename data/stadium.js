@@ -1,6 +1,7 @@
 import { db } from "../mysql.js";
 
-const select_stadium_by_statuscode = "SELECT id, main_region, stadium_name, ground_type FROM PFB_STADIUM WHERE STATUS_CODE = ?";
+// const select_stadium_by_statuscode = "SELECT id, main_region, stadium_name, ground_type FROM PFB_STADIUM WHERE STATUS_CODE = ?";
+const select_stadium_by_statuscode = "SELECT id, status_code, stadium_name, full_address, main_region, sub_region, ground_type, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at FROM PFB_STADIUM WHERE STATUS_CODE = ?";
 
 const select_stadium_by_id = "SELECT * FROM PFB_STADIUM WHERE ID = ?";
 
