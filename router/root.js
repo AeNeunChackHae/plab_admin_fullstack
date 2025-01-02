@@ -1,10 +1,13 @@
 import express from "express";
-// import auth from '../middleware/auth.js';
+import { config } from "../config.js";
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  res.render("index");
+  const data_object = {
+    basic_profile:config.profile.basic_profile_path
+  }
+  res.render("index",data_object);
 });
 
 export default router;

@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "../config.js";
 import * as stadiumRepository from "../data/stadium.js";
+import moment from "moment";
 
 /* 구장 리스트 페이지 */
 export async function stadiumList(req, res, next) {
@@ -8,6 +9,8 @@ export async function stadiumList(req, res, next) {
     page_title:"구장",
     sub_title:'구장 목록',
     regist_url:"/stadium/regist",
+    edit_url:"/stadium/edit/",
+    filter_column: "stadium_name",
     main_region:config.region.main_region_code,
     sub_region:"",
     tabulator_config:[
@@ -19,7 +22,7 @@ export async function stadiumList(req, res, next) {
   }
 
   // 모든 운영중인 구장 Select
-  const objectList = await stadiumRepository.getAllOperatingStadium()
+  const objectList = await stadiumRepository.getAllOperatingStadium();
 
   // 숫자코드 값 config에서 해당 값으로 변환  (0 -> 서울, 1 -> 부산)
   objectList.map(row => {
@@ -37,6 +40,8 @@ export async function waitStadiumList(req, res, next) {
     page_title:"구장",
     sub_title:'제휴 요청 목록',
     regist_url:"/stadium/regist",
+    edit_url:"/stadium/edit/",
+    filter_column: "stadium_name",
     main_region:config.region.main_region_code,
     sub_region:"",
     tabulator_config:[
@@ -47,6 +52,16 @@ export async function waitStadiumList(req, res, next) {
       {title:'구장타입', field:'ground_type'}
     ],
   }
+
+  // 모든 승인대기 구장 Select
+  const objectList = await stadiumRepository.getAllWaitStadium();
+
+  // 숫자코드 값 config에서 해당 값으로 변환  (0 -> 서울, 1 -> 부산)
+  objectList.map(row => {
+    row.main_region = config.region.main_region_code[row.main_region]
+    row.ground_type = config.stadium_match.ground_type_code[row.ground_type]
+  })
+  data_object.objectList = objectList
 
   res.render("list_page", data_object);
 }
@@ -59,7 +74,8 @@ export async function registPage(req, res, next) {
     main_region:config.region.main_region_code,
     sub_region:"",
     data:{},  // '수정페이지'에 필요한 param인데 없으면 ejs에서 error 발생
-    match_config_arr:[{time:'06:00'}, {time:'08:00'}, ],
+    config_data:[],
+    match_time_arr:config.stadium_match.match_time_table,
     match_type_arr:config.stadium_match.match_type_code,
     match_gender_arr:config.stadium_match.match_gender_type_code,
     match_level_arr:config.stadium_match.match_level_limit_code,
@@ -78,47 +94,68 @@ export async function create(req, res, next) {
 
   // 정상 등록
   if(insertResultId) {
-    let flag = false;
-    const config_keys = ['match_type_', 'allow_gender_', 'level_criterion_', 'match_start_time_'];
-    const config_data_arr = [];
-    while(true){
-      let num = 0;
-      const sql_param = { 'stadium_id':insertResultId }
+    const config_data_arr = getConfigParameterArray(insertResultId, formData);
 
-      // match_type_(num)이 formData에 존재하는지 확인
-      config_keys.forEach(item => {
-        let name_attribute = item+num // 'match_type_0' ... 'allow_gender_0' ... 
+    const affectedRows = await stadiumRepository.insertStadiumConfig(config_data_arr);
 
-        // 존재하는 경우
-        if(name_attribute in formData){
-          
-          let columnName = item.slice(0, -1);
-          sql_param[columnName] = formData[name_attribute]  // sql_param에 'match_type : 1' 저장
-        
-        // 없는 경우
-        }else{
-          flag = true;
-        }
-      })
-
-      // num번 매치 설정이 없던 경우 (종료)
-      if(flag) break;
-
-      // num번 매치 설정이 있던 경우 (다음 매치 설정도 확인)
-      else {
-        config_data_arr.push(sql_param);
-        console.log('config_data_arr: ', config_data_arr);
-        num += 1;
-      }
-    }
-
-    const insertAffectedRows = await stadiumRepository.insertStadiumConfig(config_data_arr);
-
-    if(insertAffectedRows > 0) res.json({status:true, url:'/stadium'});
+    if(affectedRows > 0) res.json({status:true, url:'/stadium'});
     else res.json({status:false, error:'----- config insert affectedRows is 0 -----'});
   }
   // INSERT 쿼리 중 에러 발생
   else res.json({status:false})
+}
+
+function getConfigParameterArray(stadium_id, formData){
+  let flag = false;
+  const config_keys = ['match_type_', 'allow_gender_', 'level_criterion_', 'match_start_time_'];
+  const config_data_arr = [];
+  let num = 0;
+  while(true){
+    const sql_param = { 'stadium_id':stadium_id }
+
+    // match_type_(num)이 formData에 존재하는지 확인
+    config_keys.forEach(item => {
+      let name_attribute = item+num // 'match_type_0' ... 'allow_gender_0' ... 
+      console.log('name_attribute: ', name_attribute);
+
+      // 존재하는 경우
+      if(name_attribute in formData){
+        
+        let columnName = item.slice(0, -1);
+        
+        if(columnName !== 'match_start_time'){
+          sql_param[columnName] = formData[name_attribute]  // sql_param에 'match_type : 1' 이런 key:value 모양으로 저장
+        }else{
+          const matchStartTime = moment().clone().set({
+            hour: parseInt(formData[name_attribute].split(':')[0]),
+            minute: parseInt(formData[name_attribute].split(':')[1]),
+            second: 0
+          });
+          const matchEndTime = matchStartTime.clone().add(2, 'hours');
+          const match_start_time = matchStartTime.format('YYYY-MM-DD HH:mm:ss');
+          const match_end_time = matchEndTime.format('YYYY-MM-DD HH:mm:ss');
+          sql_param['match_start_time'] = match_start_time;
+          sql_param['match_end_time'] = match_end_time;
+        }
+      
+      // 없는 경우
+      }else{
+        flag = true;
+      }
+    })
+
+    // num번 매치 설정이 없던 경우 (종료)
+    if(flag) break;
+
+    // num번 매치 설정이 있던 경우 (다음 매치 설정도 확인)
+    else {
+      config_data_arr.push(sql_param);
+      console.log('config_data_arr: ', config_data_arr);
+      num += 1;
+    }
+  }
+
+  return config_data_arr;
 }
 
 /* 구장 수정 페이지 */
@@ -129,7 +166,8 @@ export async function editPage(req, res, next) {
     main_region:config.region.main_region_code,
     sub_region:"",
     data:{},
-    match_config_arr:config.stadium_match.match_time_table,
+    config_data:[],
+    match_time_arr:config.stadium_match.match_time_table,
     match_type_arr:config.stadium_match.match_type_code,
     match_gender_arr:config.stadium_match.match_gender_type_code,
     match_level_arr:config.stadium_match.match_level_limit_code,
@@ -140,6 +178,11 @@ export async function editPage(req, res, next) {
   const stadium_data = await stadiumRepository.getStadiumOneById(stadium_id);
   if(!stadium_data) res.render('error', {error:'잘못된 접근입니다.'});
   else data_object.data = stadium_data;
+
+  // 구장 매치 설정 조회
+  const stadium_config_data = await stadiumRepository.getStadiumConfig(stadium_id);
+  if(!stadium_config_data || stadium_config_data.length <= 0) data_object.config_data = null; // 등록시 필수 기입이라 null일리는 없긴함
+  else data_object.config_data = stadium_config_data;
   
   res.render("stadium_detail", data_object);
 }
@@ -157,7 +200,13 @@ export async function update(req, res, next){
     updateResult = await stadiumRepository.updateStadium(formData);
   }
 
-  if(updateResult) res.json({status:true, url:'/stadium'});
+  if(updateResult) {
+    const config_data_arr = getConfigParameterArray(formData.stadium_id, formData);
+    config_data_arr.forEach(param => {
+      const updateQueryResult = stadiumRepository.updateStadiumConfig(param);
+    })
+    res.json({status:true, url:'/stadium'});
+  }
   else res.json({status:false, error:'update query exception 발생'})
 }
 
