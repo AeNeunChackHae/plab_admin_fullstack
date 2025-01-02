@@ -106,6 +106,8 @@ export const config = {
   admin_account: {
     account: getEnvValue("ADMIN_ACCOUNT"),
     password: getEnvValue("ADMIN_PASSWORD"),
+    email: getEnvValue("ADMIN_EMAIL"),
+    password: getEnvValue("ADMIN_EMAIL_PASSWORD")
   },
   jwt: {
     secretKey: getEnvValue("JWT_SECRET"),

@@ -1,0 +1,5 @@
+[2025-01-02T06:00:11.076Z] 스케줄 작업 중 오류 발생 - Error: Unknown column 'participant_count' in 'where clause'
+    at PromisePool.execute (C:\jungyu\GitKraken\plab_admin_fullstack\node_modules\mysql2\lib\promise\pool.js:54:22)
+    at file:///C:/jungyu/GitKraken/plab_admin_fullstack/job/match.js:70:43
+    at retryOperation (file:///C:/jungyu/GitKraken/plab_admin_fullstack/job/match.js:40:20)
+    at async Job.job (file:///C:/jungyu/GitKraken/plab_admin_fullstack/job/match.js:69:7)
