@@ -64,10 +64,10 @@
     <!--begin::Header Mobile-->
     <div id="kt_header_mobile" class="header-mobile">
       <!--begin::Logo-->
-      <a href="index.html">
+      <a href="/">
         <img
           alt="Logo"
-          src="assets/media/logos/logo-2.svg"
+          src="/assets/media/logos/logo-2.svg"
           class="max-h-30px"
         />
       </a>
@@ -79,7 +79,7 @@
           id="kt_aside_mobile_toggle"
         >
           <span class="svg-icon svg-icon-xxl">
-            <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
+            <!--begin::Svg Icon | path:/assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -109,12 +109,13 @@
           </span>
         </button>
         <!--begin::Topbar Mobile Toggle-->
+        <!-- id="kt_header_mobile_topbar_toggle" -->
         <button
           class="btn btn-icon btn-icon-white btn-hover-icon-white ml-1"
-          id="kt_header_mobile_topbar_toggle"
+          onclick="logout_confirm()"
         >
           <span class="svg-icon svg-icon-xl">
-            <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
+            <!--begin::Svg Icon | path:/assets/media/svg/icons/General/User.svg-->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"

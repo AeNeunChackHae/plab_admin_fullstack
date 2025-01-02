@@ -57,11 +57,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       const authToken = localStorage.getItem("authToken");
       // 토큰이 있는 로그인 된 사용자
       if (authToken != null || authToken != undefined) {
-        if (confirm("로그아웃 하시겠습니까?")) {
-          localStorage.removeItem("authToken");
-        } else {
-          window.history.back();
-        }
+        window.history.back();
       }
 
       // sign in 버튼 눌렀을 때 로그인 POST 요청하는 함수
