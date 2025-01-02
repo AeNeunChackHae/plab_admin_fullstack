@@ -32,6 +32,7 @@ export const config = {
     coupon_status_code: getEnvValue("COUPON_STATUS_CODE"),
     friend_status_code: getEnvValue("FRIEND_STATUS_CODE"),
     level_type_code: getEnvValue("LEVEL_TYPE_CODE"),
+    level_image_name_code: getEnvValue("LEVEL_IMAGE_NAME"),
     gender_type_code: getEnvValue("GENDER_TYPE_CODE"),
     card_type_code: getEnvValue("CARD_TYPE_CODE"),
     card_reason_code: getEnvValue("CARD_REASON_CODE"),
