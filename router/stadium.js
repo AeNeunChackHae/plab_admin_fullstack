@@ -11,6 +11,9 @@ router.get("/", stadiumController.stadiumList);
 // 승인대기 구장 리스트 페이지
 router.get("/wait", stadiumController.waitStadiumList);
 
+// 유휴 구장 리스트 페이지
+router.get("/idle", stadiumController.idleStadiumList);
+
 // 구장 등록 페이지
 router.get("/regist", stadiumController.registPage);
 

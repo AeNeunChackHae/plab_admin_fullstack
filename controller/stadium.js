@@ -38,7 +38,7 @@ export async function stadiumList(req, res, next) {
 export async function waitStadiumList(req, res, next) {
   const data_object = {
     page_title:"구장",
-    sub_title:'제휴 요청 목록',
+    sub_title:'승인 대기 구장 목록',
     regist_url:"/stadium/regist",
     edit_url:"/stadium/edit/",
     filter_column: "stadium_name",
@@ -55,6 +55,37 @@ export async function waitStadiumList(req, res, next) {
 
   // 모든 승인대기 구장 Select
   const objectList = await stadiumRepository.getAllWaitStadium();
+
+  // 숫자코드 값 config에서 해당 값으로 변환  (0 -> 서울, 1 -> 부산)
+  objectList.map(row => {
+    row.main_region = config.region.main_region_code[row.main_region]
+    row.ground_type = config.stadium_match.ground_type_code[row.ground_type]
+  })
+  data_object.objectList = objectList
+
+  res.render("list_page", data_object);
+}
+/* 유휴 구장 목록 */
+export async function idleStadiumList(req, res, next) {
+  const data_object = {
+    page_title:"구장",
+    sub_title:'유휴 구장 목록',
+    regist_url:"/stadium/regist",
+    edit_url:"/stadium/edit/",
+    filter_column: "stadium_name",
+    main_region:config.region.main_region_code,
+    regist_visible:true,
+    tabulator_config:[
+      {title:'id', field:'id', visible:false},
+      {title:'지역', field:'main_region'},
+      {title:'구장이름', field:'stadium_name'},
+      {title:'휴대폰', field:"contact_phone"},
+      {title:'구장타입', field:'ground_type'}
+    ],
+  }
+
+  // 모든 승인대기 구장 Select
+  const objectList = await stadiumRepository.getAllIdleStadium();
 
   // 숫자코드 값 config에서 해당 값으로 변환  (0 -> 서울, 1 -> 부산)
   objectList.map(row => {
