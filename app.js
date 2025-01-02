@@ -9,6 +9,7 @@ import qnaRouter from "./router/qna.js";
 import { config } from './config.js'
 import cors from "cors";
 import path from "path";
+import { scheduleMatchCheck } from "./job/match.js";
 
 const app = express();
 
@@ -48,6 +49,9 @@ app.use("/qna", qnaRouter);
 app.use("*", (req, res, next) => {
   res.render("not_found");
 });
+
+// 스케줄러
+scheduleMatchCheck(); // 스케줄러 초기화
 
 // 서버 호스팅
 const server = app.listen(config.hosting_port.admin_full);
