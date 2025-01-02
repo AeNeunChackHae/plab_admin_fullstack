@@ -124,5 +124,8 @@ export const config = {
   fileUpload: {
     admin_stadium_input_name: getEnvValue("ADMIN_STADIUM_REGIST"),
     was_upload_directory: getEnvValue("WAS_UPLOAD_DIRECTORY"),
+  },
+  profile:{
+    basic_profile_path: getEnvValue("BASIC_PROFILE_PATH"),
   }
 };

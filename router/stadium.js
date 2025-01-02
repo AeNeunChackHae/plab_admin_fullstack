@@ -8,6 +8,9 @@ const router = express.Router();
 // 구장 리스트 페이지
 router.get("/", stadiumController.stadiumList);
 
+// 승인대기 구장 리스트 페이지
+router.get("/wait", stadiumController.waitStadiumList);
+
 // 구장 등록 페이지
 router.get("/regist", stadiumController.registPage);
 
@@ -21,6 +24,6 @@ router.get("/edit/:id", stadiumController.editPage);
 router.post("/edit/:id", fileUpload.fileUpload, fileUpload.aws_s3_upload, stadiumController.update);
 
 // 메인 지역에 맞는 하위 지역 리스트 반환
-router.get("/subRegion/:id", stadiumController.subRegion)
+router.get("/subRegion/:id", stadiumController.subRegion);
 
 export default router;

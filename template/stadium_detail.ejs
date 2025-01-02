@@ -794,8 +794,8 @@
                                         <label>레벨 제한</label>
                                       </div>
                                     </div>
-                                    <% match_config_arr.forEach((time, idx) => { %>
-                                    <div id="match_config_container" class="form-group row">
+                                    <% match_time_arr.forEach((time, idx) => { %>
+                                    <div id="match_time_arr_container_<%=idx%>" class="form-group row">
                                       <div class="col-lg-3">
                                         <input type="text" readonly id="match_start_time_<%= idx %>" name="match_start_time_<%= idx %>" value="<%= time %>" class="form-control form-control-solid form-control-lg">
                                       </div>
@@ -1091,6 +1091,8 @@
       /* ejs파라미터를 화면에 뿌려주는 코드 */
       const stadium_data = <%- JSON.stringify(data) %>;
       console.log('stadium_data: ', stadium_data);
+      const config_data = <%- JSON.stringify(config_data) %>;
+      console.log('config_data: ', config_data);
       
       // data가 있을 때만 input들에 값 할당
       if(stadium_data){
@@ -1130,6 +1132,16 @@
         })
       }
 
+      // config_data에 값이 있을 때만 값 할당
+      if(config_data && config_data.length > 0){
+        const config_keys = ['match_type_', 'allow_gender_', 'level_criterion_'];
+        config_data.forEach((item, idx) => {
+          config_keys.forEach(key => {
+            document.getElementById(key+idx).value = item[key.slice(0, -1)]
+          })
+        })
+      }
+
       /* form submit 등록/수정 분기 처리 */
       document.getElementById('kt_form').addEventListener('submit', function(event) {
         
@@ -1146,7 +1158,7 @@
 
         let target_url = "";
 
-        // stadium_id 유무에 따라 url을 등록/수정 분기하여 요청청
+        // stadium_id 유무에 따라 url을 등록/수정 분기하여 요청
         const stadium_id = document.getElementById('stadium_id').value;
         if(stadium_id){
           target_url = `http://127.0.0.1:7070/stadium/edit/${stadium_id}`

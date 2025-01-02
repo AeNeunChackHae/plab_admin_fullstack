@@ -2,7 +2,9 @@ import { db } from "../mysql.js";
 
 const select_stadium_by_statuscode = "SELECT id, main_region, stadium_name, ground_type FROM PFB_STADIUM WHERE STATUS_CODE = ?";
 
-const select_stadium_by_id = "SELECT * FROM PFB_STADIUM WHERE ID = ?"
+const select_stadium_by_id = "SELECT * FROM PFB_STADIUM WHERE ID = ?";
+
+const select_stadium_config_by_id = `SELECT * FROM PFB_STADIUM_CONFIG WHERE stadium_id = ? ORDER BY id`;
 
 const insert_stadium = `
     INSERT INTO
@@ -11,17 +13,6 @@ const insert_stadium = `
       , sub_region, ground_type, parking_yn, width, height, notice, shower_yn, sell_drink_yn, lend_shoes_yn, toilet_yn)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
-const insert_stadium_config = `
-  INSERT INTO PFB_STADIUM_CONFIG (
-      stadium_id,
-      match_type,
-      allow_gender,
-      level_criterion,
-      match_start_time,
-      match_end_time
-    ) VALUES (?, ?, ?, ?, ?, ?)
-`;
 
 const update_stadium = `
   UPDATE
@@ -102,6 +93,16 @@ export async function getStadiumOneById(id){
   }
 }
 
+/* SELECT 구장 설정 (by.id) */
+export async function getStadiumConfig(id){
+  try{
+    return db.execute(select_stadium_config_by_id, [id]).then(result => result[0])
+  }catch(error){
+    console.log('----------getStadiumConfig(id) error----------\n\n\n',error);
+    return null;
+  }
+}
+
 /* 구장 INSERT (모든 인자값) */
 export async function insertStadium(data){
   try {
@@ -129,21 +130,32 @@ export async function insertStadium(data){
   }
 }
 
-export async function insertStadiumConfig(data){
-  console.log('data / insertStadiumConfig(data) 인자값: \n', data);
+export async function insertStadiumConfig(paramList){
+  console.log('data / insertStadiumConfig(paramList) 인자값: \n', paramList);
+
+  const values = paramList.map(data =>
+    `(${data.stadium_id}, ${db.escape(data.match_type)}, ${db.escape(data.allow_gender)}, ${db.escape(data.level_criterion)}, ${db.escape(data.match_start_time)}, ${db.escape(data.match_end_time)})`
+  ).join(', ');
+
+  console.log('data / insertStadiumConfig(paramList) values: \n', values);
+
+  const insert_stadium_config = `
+  INSERT INTO PFB_STADIUM_CONFIG (
+      stadium_id,
+      match_type,
+      allow_gender,
+      level_criterion,
+      match_start_time,
+      match_end_time
+    ) VALUES ${values}
+`;
+
   try {
-    return db.execute(insert_stadium_config, [
-      data.stadium_id,
-      data.match_type,
-      data.allow_gender,
-      data.level_criterion,
-      data.match_start_time,
-      data.match_end_time
-    ]).then(result => result[0].affectedRows);
-} catch (error) {
-  console.log('----------insertStadiumConfig(data) error----------\n\n\n',error);
-  return null;
-}
+    return db.execute(insert_stadium_config).then(result => result[0].affectedRows);
+  } catch (error) {
+    console.log('----------insertStadiumConfig(data) error----------\n\n\n',error);
+    return null;
+  }
 }
 
 export async function updateStadium(data){
@@ -200,6 +212,32 @@ export async function updateStadiumWithoutPhoto(data){
     return result[0].affectedRows;
   } catch (error) {
     console.error('----------updateStadium(data) error----------\n\n\n', error);
+    return null;
+  }
+}
+
+export async function updateStadiumConfig(param){
+  console.log('data / updateStadiumConfig(param) 인자값: \n', param);
+
+  const query = `
+    UPDATE PFB_STADIUM_CONFIG
+    SET
+      match_type = ?,
+      allow_gender = ?,
+      level_criterion = ?
+    WHERE
+      stadium_id = ?
+    AND
+      match_start_time = ?
+  `;
+
+  try {
+    return db.execute(query, [param.match_type, param.allow_gender, param.level_criterion, param.stadium_id, param.match_start_time]).then(result => {
+      console.log('config update query result: ', result);
+      return result[0].affectedRows;
+    });
+  } catch (error) {
+    console.log('----------insertStadiumConfig(data) error----------\n\n\n',error);
     return null;
   }
 }
