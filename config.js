@@ -72,7 +72,6 @@ export const config = {
     match_time_table: getEnvValue("MATCH_TIME_TABLE"),
     match_team_type_code: getEnvValue("MATCH_TEAM_TYPE_CODE"),
     match_result_code: getEnvValue("MATCH_RESULT_CODE"),
-    match_reservation_status_code: getEnvValue("MATCH_RESERVATION_STATUS_CODE"),
     positive_feedback_code: getEnvValue("POSITIVE_FEEDBACK_CODE"),
     negative_feedback_code: getEnvValue("NEGATIVE_FEEDBACK_CODE"),
     stadium_table_columns: getEnvValue("STADIUM_TABLE_COLUMNS"),
