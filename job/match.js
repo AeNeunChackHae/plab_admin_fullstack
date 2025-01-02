@@ -1,6 +1,8 @@
 import { db } from "../mysql.js";
 import schedule from "node-schedule";
 
+// 이메일로  실행 오류시 알려주는 로직 필요!!!
+
 // 현재 시간을 KST(한국 시간)으로 변환
 function getKoreanTime() {
   const now = new Date();
@@ -19,15 +21,8 @@ async function updateMatchStatusAndExecuteUpdate(query, params, statusCode, logM
     console.log(`Query result: ${JSON.stringify(matches)}`);
 
     if (matches.length > 0) {
-      let matchIds = matches.map((match) => match.id);
-      console.log(`Before correction - Match IDs: ${matchIds}`);
-
-      // matchIds가 배열인지 확인 및 강제 변환
-      if (!Array.isArray(matchIds)) {
-        matchIds = [matchIds];
-      }
-
-      console.log(`After correction - Match IDs: ${matchIds}`);
+      const matchIds = matches.map((match) => match.id);
+      console.log(`Match IDs to update: ${matchIds}`);
 
       if (matchIds.length > 0) {
         const [updateResult] = await db.execute(
@@ -53,8 +48,8 @@ export async function scheduleMatchCheck() {
   console.log("스케줄 작업이 시작되었습니다.");
 
   // 매 1분마다 실행
-  schedule.scheduleJob("*/1 * * * *", async () => {
-    console.log("매 1분마다 스케줄 작업 실행...");
+  schedule.scheduleJob("0 * * * *", async () => {
+    console.log("매 1시간 마마다 스케줄 작업 실행...");
 
     try {
       const now = getKoreanTime(); // 한국 시간
@@ -73,6 +68,7 @@ export async function scheduleMatchCheck() {
          FROM PFB_MATCH m
          LEFT JOIN PFB_MATCH_USER mu ON m.id = mu.match_id
          WHERE m.match_start_time = ?
+           AND m.status_code != 4  -- 4인 매치는 제외
          GROUP BY m.id
          HAVING COUNT(mu.user_id) < 18`,
         [formattedThreeHoursBefore],
@@ -82,22 +78,29 @@ export async function scheduleMatchCheck() {
 
       // 2. 현재 시작 매치 처리
       await updateMatchStatusAndExecuteUpdate(
-        `SELECT id FROM PFB_MATCH WHERE match_start_time = ?`,
+        `SELECT id 
+         FROM PFB_MATCH 
+         WHERE match_start_time = ? 
+           AND status_code = 1  -- status_code가 1인 매치만
+           AND status_code != 4`, // 4인 매치는 제외
         [formattedNow],
         2,
-        "현재 시작 매치 업데이트 완료"
+        "현재 시작 매치 업데이트 완료 (status_code 1 → 2)"
       );
 
       // 3. 현재 종료 매치 처리
       await updateMatchStatusAndExecuteUpdate(
-        `SELECT id FROM PFB_MATCH WHERE match_end_time = ?`,
+        `SELECT id 
+         FROM PFB_MATCH 
+         WHERE match_end_time = ? 
+           AND status_code IN (0, 1, 2)  -- status_code가 0, 1, 2인 매치만
+           AND status_code != 4`, // 4인 매치는 제외
         [formattedNow],
         3,
-        "현재 종료 매치 업데이트 완료"
+        "현재 종료 매치 업데이트 완료 (status_code 0, 1, 2 → 3)"
       );
     } catch (error) {
       console.error("스케줄 작업 중 오류 발생:", error);
-      // 오류 알림 메일 전송은 주석 처리된 상태로 유지
     }
   });
 }
