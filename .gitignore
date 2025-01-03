@@ -1,2 +1,4 @@
 .env
 /node_modules
+schema.sql
+test_query.sql
