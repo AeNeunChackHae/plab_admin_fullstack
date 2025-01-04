@@ -128,5 +128,8 @@ export const config = {
   },
   profile:{
     basic_profile_path: getEnvValue("BASIC_PROFILE_PATH"),
+  },
+  schedule:{
+    scheduler_match_regist_delay_date:getEnvValue("SCHEDULER_MATCH_REGIST_DELAY_DATE"),
   }
 };
