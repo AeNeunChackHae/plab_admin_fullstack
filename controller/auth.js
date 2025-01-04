@@ -38,19 +38,19 @@ export async function loginLogic(req, res, next) {
       }
 
       const isMatch = await bcrypt.compare(password, admin.login_password)
-
+      const super_admin_yn = admin.super_admin_yn;
       if (isMatch) {
           const payload = {
               role: admin.super_admin_yn === 'Y' ? "super_admin" : "admin",
               username: admin.admin_name,
               userId: admin.id,
-              super_admin_yn: admin.super_admin_yn
+              super_admin_yn
           };
 
-          const token = jwt.sign(payload, config.jwt.secretKey, { expiresIn: "1h" });
+          const token = jwt.sign(payload, config.jwt.admin_secretKey, { expiresIn: "1h" });
 
           console.log("token: ", token);
-          return res.status(200).json({ status: true, token });
+          return res.status(200).json({ status: true, token, super_admin_yn });
       } else {
           return res.status(403).json({ status: false, message: "비밀번호가 틀렸습니다." });
       }

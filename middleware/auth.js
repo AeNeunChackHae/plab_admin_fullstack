@@ -16,7 +16,7 @@ function token_validation(req, res, next) {
   }
   // aurhToken이 있는데 유효한지 확인
   else {
-    jwt.verify(token, config.jwt.secretKey, (err, decoded) => {
+    jwt.verify(token, config.jwt.admin_secretKey, (err, decoded) => {
       if (err) {
         console.log("Token is invalid: ", err.message);
         return res.json({ status: false });
