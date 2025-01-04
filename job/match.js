@@ -106,10 +106,10 @@ export async function scheduleMatchCheck() {
   });
 
   /* 매일 새벽 3시 구동 (구장 설정대로 매치를 생성하는 job) */
-  // '0 3 * * *' 매일 새벽 3시마다
-  // '0 3 * * 1' 매주 월요일 새벽 3시마다
+  // '0 2 * * *' 매일 새벽 2시마다
+  // '0 2 * * 1' 매주 월요일 새벽 2시마다
   // '*/5 * * * *' 매 5분마다 (테스트용)
-  schedule.scheduleJob('*/5 * * * *', async () => {
+  schedule.scheduleJob('0 2 * * *', async () => {
     console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job 동작!')
     const connection = await db.getConnection();  // 커넥션 획득
     try {
