@@ -1,23 +1,11 @@
 <!DOCTYPE html>
-<!--
-Template Name: Keen - The Ultimate Bootstrap 4 HTML Admin Dashboard Theme
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/
-Support: https://keenthemes.com/theme-support
-License: You must have a valid license purchased only from themes.getbootstrap.com(the above link) in order to legally use the theme for your project.
--->
 <html lang="en">
   <!--begin::Head-->
   <head>
     <base href="../../../" />
     <meta charset="utf-8" />
-    <title>Keen | List Datatable</title>
-    <meta name="description" content="User datatable listing" />
+    <title>Keen | Add User</title>
+    <meta name="description" content="Add user example" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -28,6 +16,13 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"
     />
     <!--end::Fonts-->
+    <!--begin::Page Custom Styles(used by this page)-->
+    <link
+      href="assets/css/pages/wizard/wizard-4.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!--end::Page Custom Styles-->
     <!--begin::Global Theme Styles(used by all pages)-->
     <link
       href="assets/plugins/global/plugins.bundle.css"
@@ -44,6 +39,19 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
     <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <style>
+      /* Chrome, Safari, Edge, Opera */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
     <script src="./custom/login_shield.js"></script>
   </head>
   <!--end::Head-->
@@ -56,10 +64,10 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
     <!--begin::Header Mobile-->
     <div id="kt_header_mobile" class="header-mobile">
       <!--begin::Logo-->
-      <a href="/">
+      <a href="index.html">
         <img
           alt="Logo"
-          src="/assets/media/logos/logo-2.svg"
+          src="assets/media/logos/logo-2.svg"
           class="max-h-30px"
         />
       </a>
@@ -71,7 +79,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           id="kt_aside_mobile_toggle"
         >
           <span class="svg-icon svg-icon-xxl">
-            <!--begin::Svg Icon | path:/assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
+            <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -101,13 +109,12 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           </span>
         </button>
         <!--begin::Topbar Mobile Toggle-->
-        <!-- id="kt_header_mobile_topbar_toggle" -->
         <button
           class="btn btn-icon btn-icon-white btn-hover-icon-white ml-1"
-          onclick="logout_confirm()"
+          id="kt_header_mobile_topbar_toggle"
         >
           <span class="svg-icon svg-icon-xl">
-            <!--begin::Svg Icon | path:/assets/media/svg/icons/General/User.svg-->
+            <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -230,7 +237,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
 									</span>
 								</li>
                 <li class="menu-item" aria-haspopup="true">
-									<a href="/admin" class="menu-link">
+									<a href="/user" class="menu-link">
 										<i class="menu-bullet menu-bullet-dot">
 											<span></span>
 										</i>
@@ -238,11 +245,11 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
 									</a>
 								</li>
 								<li class="menu-item" aria-haspopup="true">
-									<a href="/admin/quit" class="menu-link">
+									<a href="/user/withdraw" class="menu-link">
 										<i class="menu-bullet menu-bullet-dot">
 											<span></span>
 										</i>
-										<span class="menu-text">탈퇴 관리자</span>
+										<span class="menu-text">탈퇴 관리리자</span>
 									</a>
 								</li>
 							</ul>
@@ -527,9 +534,9 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                 <!--begin::Page Heading-->
                 <div class="d-flex align-items-baseline flex-wrap mr-5">
                   <!--begin::Page Title-->
-                  <h4 class="text-dark font-weight-bold my-1 mr-5">
+                  <h3 class="text-dark font-weight-bold my-1 mr-5">
                     <%= page_title %>
-                  </h4>
+                  </h3>
                   <!--end::Page Title-->
                   <!--begin::Breadcrumb-->
                   <!--end::Breadcrumb-->
@@ -541,7 +548,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
               <div class="topbar">
                 <!--begin::User-->
                 <div class="topbar-item mr-3">
-                  <button type="button" onclick="logout_confirm()" style="outline: none; border: none;">
+                  <a href="/auth/login">
                     <div
                       class="btn btn-icon btn-bg-white btn-hover-primary btn-icon-primary btn-circle align-items-center overflow-hidden"
                       id="kt_quick_user_toggle"
@@ -552,7 +559,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                         class="h-75 align-self-end"
                       />
                     </div>
-                  </button>
+                  </a>
                 </div>
                 <!--end::User-->
               </div>
@@ -572,49 +579,225 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
               <div class="container">
                 <!--begin::Card-->
                 <div class="card card-custom">
-                  <!--begin::Header-->
                   <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
                       <h3 class="card-label"><%= sub_title %></h3>
                     </div>
-                    <div class="input-icon p-2">
-                      <input type="text" id="search_input" class="form-control" placeholder="Search...">
-                      <span>
-                        <i class="flaticon2-search-1 icon-md"></i>
-                      </span>
-                    </div>
                   </div>
-                  <!--end::Header-->
-                  <!--begin::Body-->
-                  <div class="card-body">
-                    <div id="tabulator_container" style="font-family: 'Roboto', sans-serif;"></div>
-                    <div id="no_data_alert" hidden>
-                      <div class="d-flex justify-content-center alert alert-custom alert-white alert-shadow fade show mb-5" role="alert">
-                        <div class="alert-icon">
-                          <i class="icon-3x la fab la-dropbox"></i>
+                  <div class="card-body p-0">
+                    <!--begin::Wizard-->
+                    <div
+                      class="wizard wizard-4"
+                      id="kt_wizard"
+                      data-wizard-state="step-first"
+                      data-wizard-clickable="false"
+                    >
+                      <!--begin::Wizard Nav-->
+                      <!--end::Wizard Nav-->
+                      <!--begin::Card-->
+                      <div
+                        class="card card-custom card-shadowless rounded-top-0"
+                      >
+                      <!--  -->
+                        <!--begin::Body-->
+                        <div class="card-body p-0">
+                          <div
+                            class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10"
+                          >
+                            <div class="col-xl-12 col-xxl-10">
+                              <!--begin::Wizard Form-->
+                              <form
+                                class="form"
+                                id="kt_form"
+                                enctype="multipart/form-data"
+                              >
+                                <input type="hidden" id="admin_id" name="admin_id">
+                                <div class="row justify-content-center">
+                                  <div class="col-xl-9">
+                                    <!--begin::Wizard Step 1-->
+                                    <div
+                                      class="my-5 step"
+                                      data-wizard-type="step-content"
+                                      data-wizard-state="current"
+                                    >
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label class="col-xl-3 col-lg-3 col-form-label"
+                                        style="padding-left: 0px;">탈퇴여부</label>
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <select id="del_yn" name="del_yn" class="form-control form-control-solid form-control-lg">
+                                            <option value="N">N</option>
+                                            <option value="Y">Y</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >이름</label
+                                        >
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="admin_name"
+                                            id="admin_name"
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
+                                      </div>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label class="col-xl-3 col-lg-3 col-form-label" style="padding-left: 0px;">암호</label>
+                                        <div class="col-xl-12 col-lg-12" style="padding-right: 0px; padding-left: 0px;">
+                                          <!-- 새 비밀번호 입력 필드 (선택 사항) -->
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="new_password"
+                                            id="new_password"
+                                            type="text"
+                                            placeholder="새 비밀번호"
+                                          />
+                                        </div>
+                                      
+                                        <!-- 기존 비밀번호 (hidden으로 유지) -->
+                                        <input
+                                          type="hidden"
+                                          name="login_password"
+                                          id="login_password"
+                                          value="{{ admin.login_password }}"
+                                        />
+                                      </div>
+                                      
+                                      <div class="form-group">
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >이메일</label>
+                                          <div class="col-xl-12 col-lg-12"
+                                          style="padding-right: 0px; padding-left: 0px;">
+                                            <input
+                                              class="form-control form-control-solid form-control-lg"
+                                              name="email"
+                                              id="email"
+                                              type="text"
+                                              value=""
+                                            />
+                                          </div>
+                                      </div>
+                                    </div>
+                                    <!--end::Group-->
+                                    <!--begin::Wizard Step 4-->
+                                    <div
+                                      class="my-5 step"
+                                      data-wizard-type="step-content"
+                                    >
+                                      <h5
+                                        class="mb-10 font-weight-bold text-dark"
+                                      >
+                                        Review your Details and Submit
+                                      </h5>
+                                      <!--begin::Item-->
+                                      <div class="border-bottom mb-5 pb-5">
+                                        <div class="font-weight-bolder mb-3">
+                                          Your Account Details:
+                                        </div>
+                                        <div class="line-height-xl">
+                                          John Wick <br />Phone: +61412345678
+                                          <br />Email: johnwick@reeves.com
+                                        </div>
+                                      </div>
+                                      <!--end::Item-->
+                                      <!--begin::Item-->
+                                      <div class="border-bottom mb-5 pb-5">
+                                        <div class="font-weight-bolder mb-3">
+                                          Your Address Details:
+                                        </div>
+                                        <div class="line-height-xl">
+                                          Address Line 1 <br />Address Line 2
+                                          <br />Melbourne 3000, VIC, Australia
+                                        </div>
+                                      </div>
+                                      <!--end::Item-->
+                                      <!--begin::Item-->
+                                      <div>
+                                        <div class="font-weight-bolder">
+                                          Payment Details:
+                                        </div>
+                                        <div class="line-height-xl">
+                                          Card Number: xxxx xxxx xxxx 1111
+                                          <br />Card Name: John Wick <br />Card
+                                          Expiry: 01/21
+                                        </div>
+                                      </div>
+                                      <!--end::Item-->
+                                    </div>
+                                    <!--end::Wizard Step 4-->
+                                    <!--begin::Wizard Actions-->
+                                    <div class="d-flex justify-content-end">
+                                      <button
+                                        type="submit"
+                                        id="submit_btn"
+                                        class="btn btn-success font-weight-bolder px-10 py-3 ml-3"
+                                      >
+                                        Submit
+                                        <span class="svg-icon svg-icon-md ml-2">
+                                          <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Check.svg-->
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            width="24px"
+                                            height="24px"
+                                            viewBox="0 0 24 24"
+                                            version="1.1"
+                                          >
+                                            <g
+                                              stroke="none"
+                                              stroke-width="1"
+                                              fill="none"
+                                              fill-rule="evenodd"
+                                            >
+                                              <polygon
+                                                points="0 0 24 0 24 24 0 24"
+                                              ></polygon>
+                                              <path
+                                                d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z"
+                                                fill="#000000"
+                                                fill-rule="nonzero"
+                                                transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002)"
+                                              ></path>
+                                            </g>
+                                          </svg>
+                                          <!--end::Svg Icon-->
+                                        </span>
+                                      </button>
+                                    </div>
+                                    <!--end::Wizard Actions-->
+                                  </div>
+                                </div>
+                              </form>
+                              <!--end::Wizard Form-->
+                            </div>
+                          </div>
                         </div>
-                        <div style="font-size: 17px; width: 300px; overflow: hidden; text-align: center; line-height: 40px;">"조회된 데이터가 없습니다."</div>
+                        <!--end::Body-->
                       </div>
+                      <!--end::Card-->
                     </div>
-                    <div class="d-flex justify-content-end mt-5">
-                      <div class="card-toolbar" id="btn_container" hidden>
-                        <!--begin::Button-->
-                        <a href=<%= regist_url %> class="btn btn-primary font-weight-bolder">
-                          <span class="svg-icon svg-icon-md">
-                            <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect x="0" y="0" width="24" height="24"></rect>
-                                <circle fill="#000000" cx="9" cy="15" r="6"></circle>
-                                <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3"></path>
-                              </g>
-                            </svg>
-                            <!--end::Svg Icon--> </span>등록</a>
-                        <!--end::Button-->
-                      </div>
-                    </div>
+                    <!--end::Wizard-->
                   </div>
-                  <!--end::Body-->
                 </div>
                 <!--end::Card-->
               </div>
@@ -624,48 +807,6 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           </div>
           <!--end::Content-->
           <!--begin::Footer-->
-          <!--doc: add "bg-white" class to have footer with solod background color-->
-          <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
-            <!--begin::Container-->
-            <div
-              class="container d-flex flex-column flex-md-row align-items-center justify-content-between"
-            >
-              <!--begin::Copyright-->
-              <div class="text-dark order-2 order-md-1">
-                <span class="text-muted font-weight-bold mr-2">2021©</span>
-                <a
-                  href="http://keenthemes.com/keen"
-                  target="_blank"
-                  class="text-dark-75 text-hover-primary"
-                  >Keenthemes</a
-                >
-              </div>
-              <!--end::Copyright-->
-              <!--begin::Nav-->
-              <div class="nav nav-dark order-1 order-md-2 font-weight-bold">
-                <a
-                  href="http://keenthemes.com/keen"
-                  target="_blank"
-                  class="nav-link pr-3 pl-0"
-                  >About</a
-                >
-                <a
-                  href="http://keenthemes.com/keen"
-                  target="_blank"
-                  class="nav-link px-3"
-                  >Team</a
-                >
-                <a
-                  href="http://keenthemes.com/keen"
-                  target="_blank"
-                  class="nav-link pl-3 pr-0"
-                  >Contact</a
-                >
-              </div>
-              <!--end::Nav-->
-            </div>
-            <!--end::Container-->
-          </div>
           <!--end::Footer-->
         </div>
         <!--end::Wrapper-->
@@ -673,352 +814,6 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       <!--end::Page-->
     </div>
     <!--end::Main-->
-    <!--begin::Search Panel-->
-    <div id="kt_quick_search" class="offcanvas offcanvas-right p-10">
-      <!--begin::Header-->
-      <div
-        class="offcanvas-header d-flex align-items-center justify-content-between mb-5"
-      >
-        <h3 class="font-weight-bold m-0">
-          Search
-          <small class="text-muted font-size-sm ml-2"
-            >files, reports, members</small
-          >
-        </h3>
-        <a
-          href="#"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          id="kt_quick_search_close"
-        >
-          <i class="ki ki-close icon-xs text-muted"></i>
-        </a>
-      </div>
-      <!--end::Header-->
-      <!--begin::Content-->
-      <div class="offcanvas-content">
-        <!--begin::Container-->
-        <div
-          class="quick-search quick-search-offcanvas quick-search-has-result"
-          id="kt_quick_search_offcanvas"
-        >
-          <!--begin::Form-->
-          <form method="get" class="quick-search-form border-bottom pt-5 pb-1">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <span class="svg-icon svg-icon-lg">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/General/Search.svg-->
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      width="24px"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      version="1.1"
-                    >
-                      <g
-                        stroke="none"
-                        stroke-width="1"
-                        fill="none"
-                        fill-rule="evenodd"
-                      >
-                        <rect x="0" y="0" width="24" height="24" />
-                        <path
-                          d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z"
-                          fill="#000000"
-                          fill-rule="nonzero"
-                          opacity="0.3"
-                        />
-                        <path
-                          d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z"
-                          fill="#000000"
-                          fill-rule="nonzero"
-                        />
-                      </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                  </span>
-                </span>
-              </div>
-              <input type="text" class="form-control" placeholder="Search..." />
-              <div class="input-group-append">
-                <span class="input-group-text">
-                  <i
-                    class="quick-search-close ki ki-close icon-sm text-muted"
-                  ></i>
-                </span>
-              </div>
-            </div>
-          </form>
-          <!--end::Form-->
-          <!--begin::Wrapper-->
-          <div class="quick-search-wrapper pt-5">
-            <div class="quick-search-result">
-              <!--begin::Message-->
-              <div class="text-muted d-none">No record found</div>
-              <!--end::Message-->
-              <!--begin::Section-->
-              <div
-                class="font-size-sm text-primary font-weight-bolder text-uppercase mb-2"
-              >
-                Documents
-              </div>
-              <div class="mb-10">
-                <!--begin::Item-->
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 bg-transparent flex-shrink-0">
-                    <img src="assets/media/svg/files/doc.svg" alt="" />
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >AirPlus Requirements</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >by Grog John</span
-                    >
-                  </div>
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 bg-transparent flex-shrink-0">
-                    <img src="assets/media/svg/files/pdf.svg" alt="" />
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >TechNav Documentation</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >by Mary Broun</span
-                    >
-                  </div>
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 bg-transparent flex-shrink-0">
-                    <img src="assets/media/svg/files/xml.svg" alt="" />
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >All Framework Docs</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >by Nick Stone</span
-                    >
-                  </div>
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 bg-transparent flex-shrink-0">
-                    <img src="assets/media/svg/files/csv.svg" alt="" />
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >Finance &amp; Accounting Reports</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >by Jhon Larson</span
-                    >
-                  </div>
-                </div>
-                <!--end::Item-->
-              </div>
-              <!--end::Section-->
-              <!--begin::Section-->
-              <div
-                class="font-size-sm text-primary font-weight-bolder text-uppercase mb-2"
-              >
-                Members
-              </div>
-              <div class="mb-10">
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div
-                      class="symbol-label"
-                      style="
-                        background-image: url('assets/media/users/150-2.jpg');
-                      "
-                    ></div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >Milena Gibson</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >UI Designer</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div
-                      class="symbol-label"
-                      style="
-                        background-image: url('assets/media/users/150-14.jpg');
-                      "
-                    ></div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >Stefan JohnStefan</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Marketing Manager</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div
-                      class="symbol-label"
-                      style="
-                        background-image: url('assets/media/users/150-2.jpg');
-                      "
-                    ></div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >Anna Strong</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Software Developer</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div
-                      class="symbol-label"
-                      style="
-                        background-image: url('assets/media/users/150-11.jpg');
-                      "
-                    ></div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >Nick Bold</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Project Coordinator</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <!--end::Section-->
-              <!--begin::Section-->
-              <div
-                class="font-size-sm text-primary font-weight-bolder text-uppercase mb-2"
-              >
-                Files
-              </div>
-              <div class="mb-10">
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div class="symbol-label">
-                      <i class="flaticon-psd text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >79 PSD files generated</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >by Grog John</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div class="symbol-label">
-                      <i class="flaticon2-supermarket text-warning"></i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >$2900 worth products sold</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Total 234 items</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div class="symbol-label">
-                      <i class="flaticon-safe-shield-protection text-info"></i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >4 New items submitted</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Marketing Manager</span
-                    >
-                  </div>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
-                  <div class="symbol symbol-30 flex-shrink-0">
-                    <div class="symbol-label">
-                      <i
-                        class="flaticon-safe-shield-protection text-warning"
-                      ></i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column ml-3 mt-2 mb-2">
-                    <a
-                      href="#"
-                      class="font-weight-bold text-dark text-hover-primary"
-                      >4 New items submitted</a
-                    >
-                    <span class="font-size-sm font-weight-bold text-muted"
-                      >Marketing Manager</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <!--end::Section-->
-            </div>
-          </div>
-          <!--end::Wrapper-->
-        </div>
-        <!--end::Container-->
-      </div>
-      <!--end::Content-->
-    </div>
-    <!--end::Search Panel-->
-    <!--begin::Quick Actions Panel-->
-    <!--end::Quick Actions Panel-->
-    <!-- begin::User Panel-->
-    <!-- end::User Panel-->
-    <!--begin::Quick Panel-->
-    <!--end::Quick Panel-->
-    <!--begin::Chat Panel-->
-    <!--end::Chat Panel-->
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop">
       <span class="svg-icon">
@@ -1122,64 +917,65 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
     <script src="assets/js/scripts.bundle.js"></script>
     <!--end::Global Theme Bundle-->
     <!--begin::Page Scripts(used by this page)-->
-    <script src="assets/js/pages/custom/user/list-datatable.js"></script>
+    <script src="assets/js/pages/custom/user/add-user.js"></script>
     <!--end::Page Scripts-->
 
-    <!-- begin :: TabulatorJS -->
-    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_bulma.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!-- 사용자 정의 javascript -->
     <script>
-      /* 등록 버튼 hidden 상태 */
-      const btn_visible = <%- JSON.stringify(regist_visible) %>;
-      if (!btn_visible) {
-        const btn_container = document.getElementById('btn_container')
-        btn_container.hidden = true;
-      }else{
-        btn_container.hidden = false;
+      /* ejs파라미터를 화면에 뿌려주는 코드 */
+      const admin_data = <%- JSON.stringify(data) %>;
+      console.log('admin_data: ', admin_data);
+
+      // data가 있을 때만 input들에 값 할당
+      if(Object.keys(admin_data).length > 0){
+        document.getElementById('admin_id').value = admin_data.id;
+        document.getElementById('del_yn').value = admin_data.del_yn;
+        document.getElementById('admin_name').value = admin_data.admin_name;
+        document.getElementById('login_password').value = admin_data.login_password;
+        document.getElementById('email').value = admin_data.email;
       }
-      console.log(" btn_visible: ", btn_visible)
 
-      const tableData = <%- JSON.stringify(objectList) %>;
-      console.log('tableData: ', tableData);
+      /* form submit 등록/수정 분기 처리 */
+      document.getElementById('kt_form').addEventListener('submit', function(event) {
+        
+        // 기본 제출 동작 예방
+        event.preventDefault();
 
-      const no_data_alert = document.getElementById("no_data_alert")
-      const tabulator_container = document.getElementById("tabulator_container")
-      console.log("no_data_alert: ", no_data_alert)
-      console.log("tabulator_container: ", tabulator_container)
-      
-      // 빈 값
-      if (!tableData || tableData.length <= 0) {
-        console.log("if (!tableData || tabulator.length <= 0)" )
-        no_data_alert.hidden=false
-        tabulator_container.hidden=true
-      } else {
-        no_data_alert.hidden=true
-        tabulator_container.hidden=false
-        const table = new Tabulator("#tabulator_container", {
-        data: tableData, //테이블에 로드할 데이터s
-        layout : "fitColumns",
-        pagination:"local", //enable local pagination.
-        paginationSize:10, // 한 페이지에 5개의 결과 표시
-        columns:<%- JSON.stringify(tabulator_config) %>
-      });
-      
-      table.on("rowClick", function(e, row){ 
-        console.log('clicked row data: ', row.getData())
-        const edit_url = <%- JSON.stringify(edit_url) %>;
-        location.href = edit_url + row.getData().id
-      });
+        const form = event.target;
+        const formData = new FormData(form);
+        formData.append('requestTable', 'admin');
+        // FormData의 내용을 로깅
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
 
-      // 검색 필드 이벤트 리스너 설정
-      document.getElementById("search_input").addEventListener("input", function(){
-          let val = this.value;
-          const filter_column = <%- JSON.stringify(filter_column) %>
-          table.setFilter(filter_column, "like", val); // 'name' 컬럼에서 입력 값과 유사한 내용을 필터링
+        let target_url = "";
+
+        // manager_id 유무에 따라 url을 등록/수정 분기하여 요청
+        const admin_id = document.getElementById('admin_id').value;
+        if(admin_id){
+          target_url = `http://127.0.0.1:7070/admin/edit/${admin_id}`
+        }else{
+          target_url = `http://127.0.0.1:7070/admin/regist`
+        }
+        console.log('target_url: ', target_url)
+        fetch(target_url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('response data: ', data);
+          // status : true 응답일 때
+          if(data.status) location.href = `${data.url}`
+          // status : false 응답일 때
+          else alert('예외가 발생했습니다!\n'+data.error)
+        })
+        .catch(error => console.error('Error:', error));
       });
-      }
 
 
     </script>
-    <!-- end :: TabulatorJS -->
   </body>
   <!--end::Body-->
 </html>
