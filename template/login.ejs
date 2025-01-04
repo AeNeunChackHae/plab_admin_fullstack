@@ -62,14 +62,14 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
 
       // sign in 버튼 눌렀을 때 로그인 POST 요청하는 함수
       function postLogin() {
-        const username = document.getElementById("username");
+        const email = document.getElementById("email");
         const password = document.getElementById("password");
 
-        if(!username.value.trim() || username.value.trim() == ''){
-          console.log('username.value.trim()', username.value.trim())
+        if(!email.value.trim() || email.value.trim() == ''){
+          console.log('email.value.trim()', email.value.trim())
           alert('아이디를 입력해주세요.')
-          username.value = '' // 공백 제거
-          username.focus()
+          email.value = '' // 공백 제거
+          email.focus()
           return
         }
 
@@ -87,7 +87,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
           },
           body: JSON.stringify({
             // 객체를 JSON 문자열로 변환
-            username: username.value,
+            email: email.value,
             password: password.value,
           }),
         })
@@ -174,8 +174,8 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                     <input
                       class="form-control form-control-solid h-auto p-6 rounded-lg"
                       type="text"
-                      name="username"
-                      id="username"
+                      name="email"
+                      id="email"
                       autocomplete="off"
                       onkeydown="pressEnter(event)"
                     />

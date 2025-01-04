@@ -1,4 +1,5 @@
 import express from "express";
+import adminRouter from "./router/admin.js"
 import rootRouter from "./router/root.js";
 import authRouter from "./router/auth.js";
 import userRouter from "./router/user.js";
@@ -38,6 +39,7 @@ app.set("views", path.join(process.cwd(), "template"));
 
 // Router 설정
 app.use("/", rootRouter);
+app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/manager", managerRouter);
