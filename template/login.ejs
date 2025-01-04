@@ -99,6 +99,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
               return;
             }
             localStorage.setItem("authToken", data.token);
+            localStorage.setItem("super_admin_yn", data.super_admin_yn);
             location.href = "/";
           })
           .catch((error) => console.error("Error:", error));

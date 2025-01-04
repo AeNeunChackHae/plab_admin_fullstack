@@ -49,7 +49,7 @@ export async function scheduleMatchCheck() {
   console.log("스케줄 작업이 시작되었습니다.");
 
   // 매 1분마다 실행
-  schedule.scheduleJob("0 * * * *", async () => {
+  schedule.scheduleJob(config.scheduler.match_status_change_cron, async () => {
     console.log("매 1분마다 스케줄 작업 실행...");
 
     try {
@@ -109,7 +109,7 @@ export async function scheduleMatchCheck() {
   // '0 2 * * *' 매일 새벽 2시마다
   // '0 2 * * 1' 매주 월요일 새벽 2시마다
   // '*/5 * * * *' 매 5분마다 (테스트용)
-  schedule.scheduleJob('0 2 * * *', async () => {
+  schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
     console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job 동작!')
     const connection = await db.getConnection();  // 커넥션 획득
     try {
@@ -138,8 +138,8 @@ export async function scheduleMatchCheck() {
       console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job / match config SELECT 결과 row: ', rows);
       
       rows.map(row => {
-        row.match_start_time = getAddedDate(config.schedule.scheduler_match_regist_delay_date, row.match_start_time);
-        row.match_end_time = getAddedDate(config.schedule.scheduler_match_regist_delay_date, row.match_end_time);
+        row.match_start_time = getAddedDate(config.scheduler.match_regist_delay_date, row.match_start_time);
+        row.match_end_time = getAddedDate(config.scheduler.match_regist_delay_date, row.match_end_time);
       })
       console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job / 가공된 rows: ', rows);
 

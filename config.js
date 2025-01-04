@@ -2,6 +2,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+function getEnvValueConvertUnderbar(key){
+  let value = process.env[key];
+  value.replace(/_/g, ' ')
+}
+
 function getEnvValue(key) {
   let value = process.env[key];
   if (value && value.startsWith("[")) {
@@ -109,7 +114,9 @@ export const config = {
     email: getEnvValue("ADMIN_EMAIL")
   },
   jwt: {
-    secretKey: getEnvValue("JWT_SECRET"),
+    user_secretKey: getEnvValue("USER_JWT_SECRET"),
+    manager_secretKey: getEnvValue("MANAGER_JWT_SECRET"),
+    admin_secretKey: getEnvValue("ADMIN_JWT_SECRET"),
     expiresInSec: parseInt(getEnvValue("JWT_EXPIRES_SEC", 259200)),
   },
   bcrypt: {
@@ -129,7 +136,9 @@ export const config = {
   profile:{
     basic_profile_path: getEnvValue("BASIC_PROFILE_PATH"),
   },
-  schedule:{
-    scheduler_match_regist_delay_date:getEnvValue("SCHEDULER_MATCH_REGIST_DELAY_DATE"),
+  scheduler:{
+    match_status_change_cron:getEnvValueConvertUnderbar('MATCH_STATUS_CHANGE_CRON'),
+    match_regist_cron:getEnvValueConvertUnderbar('MATCH_REGIST_CRON'),
+    match_regist_delay_date:getEnvValue("MATCH_REGIST_DELAY_DATE"),
   }
 };
