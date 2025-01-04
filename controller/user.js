@@ -9,6 +9,7 @@ export async function userList(req, res, next) {
     sub_title:'사용자 목록',
     regist_url:"/user/regist",
     edit_url:"/user/edit/",
+    level_type_code:config.mypage.level_type_code,
     regist_visible:true,
     filter_column: "title",
     tabulator_config:[
@@ -40,6 +41,7 @@ export async function withdrawUserList(req, res, next) {
     sub_title:'탈퇴 유저 목록',
     regist_url:"/user/regist",
     edit_url:"/user/edit/",
+    level_type_code:config.mypage.level_type_code,
     regist_visible:false,
     filter_column: "title",
     tabulator_config:[
@@ -64,15 +66,62 @@ export async function withdrawUserList(req, res, next) {
   res.render("list_page", data_object);
 }
 
-/* 유저 등록 페이지 */
+/* 사용자 등록 페이지 */
 export async function registPage(req, res, next) {
     const data_object = {
         page_title:"사용자",
         sub_title:'사용자 등록',
-        main_region:config.region.main_region_code,
+        level_type_code:config.mypage.level_type_code,
         sub_region:"",
         data:{},  // '수정페이지'에 필요한 param인데 없으면 ejs에서 error 발생
     }
 
     res.render("user_detail", data_object);
+}
+
+/* 사용자 등록 로직 */
+export async function create(req, res, next) {
+  const formData = req.body;
+  console.log(" controller / user / create(formData) formData: ", formData);
+
+  const updateResult = await userRepository.insertUser(formData);
+
+  if (updateResult) {
+    res.json({ status: true, url: '/user' });
+  } else {
+    res.json({ status: false, error: 'update query exception 발생' });
+  }
+}
+
+/* 사용자 수정 페이지 */
+export async function editPage(req, res, next) {
+  const user_data_id = parseInt(req.params.id, 10);
+  const user_data = await userRepository.getUserOneById(user_data_id);
+
+  // 사용자 데이터가 없을 경우
+  if (!user_data) {
+    res.render('error', { error: '잘못된 접근입니다.' });
+  } else {
+    const data_object = {
+      page_title: "사용자",
+      sub_title: '사용자 수정',
+      level_type_code:config.mypage.level_type_code,
+      data: user_data
+    };
+    res.render("user_detail", data_object);
+  }
+}
+
+/* 관리자 수정 로직 */
+export async function update(req, res, next) {
+  const formData = req.body;
+  console.log(" controller / user / update(formData) formData: ", formData);
+
+  const updateResult = await userRepository.updateUser(formData);
+
+  if (updateResult) {
+    res.json({ status: true, url: '/user' });
+  } else {
+    res.json({ status: false, error: 'update query exception 발생' });
+  }
 }
