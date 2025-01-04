@@ -53,6 +53,7 @@
       }
     </style>
     <script src="./custom/login_shield.js"></script>
+    <script defer src="./custom/role.js"></script>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -64,7 +65,7 @@
     <!--begin::Header Mobile-->
     <div id="kt_header_mobile" class="header-mobile">
       <!--begin::Logo-->
-      <a href="index.html">
+      <a href="/">
         <img
           alt="Logo"
           src="assets/media/logos/logo-2.svg"
@@ -212,7 +213,7 @@
             <h4 class="menu-text">MENU</h4>
             <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
           </li>
-          <li id="aside_admin_menu" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+          <li id="aside_admin_menu" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover" hidden>
 						<a href="javascript:;" class="menu-link menu-toggle">
 							<span class="svg-icon menu-icon">
 								<!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
@@ -237,7 +238,7 @@
 									</span>
 								</li>
                 <li class="menu-item" aria-haspopup="true">
-									<a href="/user" class="menu-link">
+									<a href="/admin" class="menu-link">
 										<i class="menu-bullet menu-bullet-dot">
 											<span></span>
 										</i>
@@ -245,11 +246,11 @@
 									</a>
 								</li>
 								<li class="menu-item" aria-haspopup="true">
-									<a href="/user/withdraw" class="menu-link">
+									<a href="/admin/quit" class="menu-link">
 										<i class="menu-bullet menu-bullet-dot">
 											<span></span>
 										</i>
-										<span class="menu-text">탈퇴 관리리자</span>
+										<span class="menu-text">탈퇴 관리자</span>
 									</a>
 								</li>
 							</ul>
@@ -611,7 +612,7 @@
                                 id="kt_form"
                                 enctype="multipart/form-data"
                               >
-                                <input type="hidden" id="stadium_id" name="stadium_id">
+                                <input type="hidden" id="user_id" name="user_id">
                                 <div class="row justify-content-center">
                                   <div class="col-xl-9">
                                     <!--begin::Wizard Step 1-->
@@ -621,345 +622,130 @@
                                       data-wizard-state="current"
                                     >
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label text-left"
-                                          >구장 사진</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <div
-                                            class="image-input image-input-outline"
-                                            id="kt_user_add_avatar"
-                                          >
-                                            <div
-                                              class="image-input-wrapper"
-                                              id="photo_path"
-                                              style="background-image: url()"
-                                            ></div>
-                                            <label
-                                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                                              data-action="change"
-                                              data-toggle="tooltip"
-                                              title=""
-                                              data-original-title="Change avatar"
-                                            >
-                                              <i
-                                                class="fa fa-pen icon-sm text-muted"
-                                              ></i>
-                                              <input
-                                                type="file"
-                                                name="photo"
-                                                id="photo"
-                                                accept=".png, .jpg, .jpeg"
-                                              />
-                                              <!-- <input
-                                                type="hidden"
-                                                name="photo_remove"
-                                              /> -->
-                                            </label>
-                                            <span
-                                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                                              data-action="cancel"
-                                              data-toggle="tooltip"
-                                              title="Cancel avatar"
-                                            >
-                                              <i
-                                                class="ki ki-bold-close icon-xs text-muted"
-                                              ></i>
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 상태</label>
-                                        <div class="col-lg-9 col-xl-9">
+                                      <div class="form-group">
+                                        <label class="col-xl-3 col-lg-3 col-form-label"
+                                        style="padding-left: 0px;">탈퇴여부</label>
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
                                           <select id="status_code" name="status_code" class="form-control form-control-solid form-control-lg">
-                                            <option value="">Select</option>
-                                            <option value=0>승인 대기</option>
-                                            <option value=1>정상 운영</option>
-                                            <option value=2>미운영</option>
+                                            <option value="0">정상</option>
+                                            <option value="1">탈퇴</option>
                                           </select>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">구장 타입</label>
-                                        <div class="col-lg-9 col-xl-9">
-                                          <select id="ground_type" name="ground_type" class="form-control form-control-solid form-control-lg">
-                                            <option value="">Select</option>
-                                            <option value=0>인조잔디</option>
-                                            <option value=1>천연잔디</option>
-                                            <option value=2>인도어</option>
-                                            <option value=3>맨땅</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
+                                      <div class="form-group">
                                         <label
                                           class="col-xl-3 col-lg-3 col-form-label"
-                                          >구장 이름</label
+                                          style="padding-left: 0px;"
+                                          >이름</label
                                         >
-                                        <div class="col-lg-9 col-xl-9">
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
                                           <input
                                             class="form-control form-control-solid form-control-lg"
-                                            name="stadium_name"
-                                            id="stadium_name"
+                                            name="username"
+                                            id="username"
                                             type="text"
                                             value=""
-                                            placeholder="예 : 서울 노원 RC 풋살 스타디움"
+                                            readonly
                                           />
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group row">
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label"
-                                          >주소</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <input
-                                            class="form-control form-control-solid form-control-lg"
-                                            name="full_address"
-                                            id="full_address"
-                                            type="text"
-                                            value=""
-                                            placeholder="예 : 서울특별시 노원구 노원로238 4층"
-                                          />
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div
-                                        class="form-group row fv-plugins-icon-container"
-                                      >
-                                        <label
-                                          class="col-xl-3 col-lg-3 col-form-label"
-                                          >이메일</label
-                                        >
-                                        <div class="col-lg-9 col-xl-9">
-                                          <div
-                                            class="input-group input-group-solid input-group-lg"
-                                          >
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                <i class="la la-at"></i>
-                                              </span>
-                                            </div>
-                                            <input
-                                              type="text"
-                                              class="form-control form-control-solid form-control-lg"
-                                              name="contact_email"
-                                              id="contact_email"
-                                              placeholder="구장주님의 Email을 입력해주세요"
-                                              value=""
-                                            />
-                                          </div>
-                                          <div
-                                            class="fv-plugins-message-container"
-                                          ></div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <div class="col-lg-6">
-                                          <div class="form-group row fv-plugins-icon-container">
-                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 가로 길이</label>
-                                            <div class="col-lg-8 col-xl-8">
-                                              <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="width" id="width" type="number" value="" />
-                                              </div>
-                                              <div class="fv-plugins-message-container"></div>
-                                            <div class="fv-plugins-message-container"></div></div>
-                                          </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <div class="form-group row fv-plugins-icon-container">
-                                            <label class="col-xl-4 col-lg-4 col-form-label">구장 세로 길이</label>
-                                            <div class="col-lg-8 col-xl-8">
-                                              <div class="input-group input-group-solid input-group-lg">
-                                                <input class="form-control form-control-solid form-control-lg" name="height" id="height" type="number" value="" />
-                                              </div>
-                                              <div class="fv-plugins-message-container"></div>
-                                            <div class="fv-plugins-message-container"></div></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <div class="col-lg-6">
-                                          <label>주소 대분류</label>
-                                          <select
-                                            id="main_region"
-                                            name="main_region"
-                                            class="form-control form-control-solid form-control-lg"
-                                            onchange="mainRegionChange(event)"
-                                          >
-                                            <option value="">Select</option>
-                                            <% main_region.forEach(function(item, idx) { %>
-                                              <option value="<%= idx %>"><%= item %></option>
-                                            <% }); %>
-                                          </select>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <label>주소 소분류</label>
-                                          <select
-                                            id="sub_region"
-                                            name="sub_region"
-                                            class="form-control form-control-solid form-control-lg"
-                                          >
-                                            <option value="">Select</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
                                         <label class="col-2 col-form-label"
-                                          >샤워실</label
+                                          >성별</label
                                         >
                                         <div
                                           class="col-4 d-flex justify-content-end"
                                         >
                                           <div class="radio-inline d-flex">
                                             <label class="radio radio-primary">
-                                            <input type="radio" name="shower_yn" value="Y">
-                                            <span></span>Y</label>
+                                            <input type="radio" id="gender" name="gender" value="0">
+                                            <span></span>남성</label>
                                             <label class="radio radio-primary">
-                                            <input type="radio" name="shower_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
-                                        </div>
-                                        <label class="col-2 col-form-label"
-                                          >음료 판매</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                              <input type="radio" name="sell_drink_yn" value="Y">
-                                              <span></span>Y</label>
-                                              <label class="radio radio-primary">
-                                              <input type="radio" name="sell_drink_yn" checked="checked" value="N">
-                                              <span></span>N</label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
-                                          >풋살화 대여</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_shoes_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="lend_shoes_yn" checked="checked" value="N">
-                                            <span></span>N</label>
-                                          </div>
-                                        </div>
-                                        <label class="col-2 col-form-label"
-                                          >화장실</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                              <input type="radio" name="toilet_yn" value="Y">
-                                              <span></span>Y</label>
-                                              <label class="radio radio-primary">
-                                              <input type="radio" name="toilet_yn" checked="checked" value="N">
-                                              <span></span>N</label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!--end::Group-->
-                                      <!--begin::Group-->
-                                      <div class="form-group row">
-                                        <label class="col-2 col-form-label"
-                                          >주차 가능 여부</label
-                                        >
-                                        <div
-                                          class="col-4 d-flex justify-content-end"
-                                        >
-                                          <div class="radio-inline d-flex">
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="parking_yn" value="Y">
-                                            <span></span>Y</label>
-                                            <label class="radio radio-primary">
-                                            <input type="radio" name="parking_yn" checked="checked" value="N">
-                                            <span></span>N</label>
+                                            <input type="radio" id="gender" name="gender" checked="checked" value="1">
+                                            <span></span>여성</label>
                                           </div>
                                         </div>
                                       </div>
                                       <!--end::Group-->
                                       <!--begin::Group-->
                                       <div class="form-group">
-                                        <label for="exampleTextarea">구장 특이사항</label>
-                                        <textarea class="form-control form-control-solid" rows="3" id="notice" name="notice" style="max-height: 300px;"></textarea>
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >생일</label
+                                        >
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="birth_date"
+                                            id="birth_date"
+                                            type="text"
+                                            value=""
+                                            readonly
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
-                                    <!--end::Group-->
-
-                                    <!--begin::Group-->
-                                    <div class="row">
-                                      <div class="col-lg-3">
-                                        <label>매치 시간</label>
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >이메일</label
+                                        >
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="email"
+                                            id="email"
+                                            type="text"
+                                            value=""
+                                            readonly
+                                          />
+                                        </div>
                                       </div>
-                                      <div class="col-lg-3">
-                                        <label>매치 타입</label>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <label>성별 구분</label>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <label>레벨 제한</label>
-                                      </div>
-                                    </div>
-                                    <% match_config_arr.forEach((time, idx) => { %>
-                                    <div id="match_config_container" class="form-group row">
-                                      <div class="col-lg-3">
-                                        <input type="text" readonly id="match_start_time_<%= idx %>" name="match_start_time_<%= idx %>" value="<%= time %>" class="form-control form-control-solid form-control-lg">
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="match_type_<%= idx %>" name="match_type_<%= idx %>" onchange="" class="form-control form-control-solid form-control-lg">
-                                          <% match_type_arr.forEach((type_item, type_idx) => { %>
-                                          <option value="<%= type_idx %>"><%= type_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="allow_gender_<%= idx %>" name="allow_gender_<%= idx %>" class="form-control form-control-solid form-control-lg">
-                                          <% match_gender_arr.forEach((gender_item, gender_idx) => { %>
-                                            <option value="<%= gender_idx %>"><%= gender_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select id="level_criterion_<%= idx %>" name="level_criterion_<%= idx %>" class="form-control form-control-solid form-control-lg">
-                                          <% match_level_arr.forEach((level_item, level_idx) => { %>
-                                            <option value="<%= level_idx %>"><%= level_item %></option>
-                                          <% }); %>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <% }); %>
-                                    <!--end::Group-->
-
+                                      <!--end::Group-->
+                                      <!--begin::Group-->
+                                      <div class="form-group">
+                                        <label
+                                          class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;"
+                                          >전화번호</label
+                                        >
+                                        <div class="col-xl-12 col-lg-12"
+                                        style="padding-right: 0px; padding-left: 0px;">
+                                          <input
+                                            class="form-control form-control-solid form-control-lg"
+                                            name="phone_number"
+                                            id="phone_number"
+                                            type="text"
+                                            value=""
+                                            readonly
+                                          />
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-xl-3 col-lg-3 col-form-label"
+                                          style="padding-left: 0px;">레벨</label>
+                                          <div class="col-xl-12 col-lg-12"
+                                          style="padding-right: 0px; padding-left: 0px;">
+                                            <select id="level_code" name="level_code" class="form-control form-control-solid form-control-lg">
+                                              <option value="">Select</option>
+                                              <% level_type_code.forEach(function(item, idx) { %>
+                                                <option value="<%= idx %>"><%= item %></option>
+                                              <% }); %>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>  
+                                      <!--end::Group-->                                                         
                                     <!--end::Wizard Step 1-->
                                     <!--begin::Wizard Step 2-->
                                     <!--end::Wizard Step 2-->
@@ -1188,82 +974,27 @@
 
     <!-- 사용자 정의 javascript -->
     <script>
-      // 하위 지역 전역 변수
-      let g_sub_region_value = 0;
-
-      /* 메인 지역 변경시 하위 지역 리스트 변경하는 onchange 함수 */
-      function mainRegionChange(e){
-          const url = 'http://127.0.0.1:7070/stadium/subRegion/'+e.target.value;
-          const options = {
-              method: 'GET', // HTTP 메서드 설정
-              headers: {
-              'Content-Type': 'application/json', // 요청의 콘텐츠 타입 헤더
-              }
-          };
-
-          fetch(url, options)
-              .then(response => response.json())
-              .then(data => {
-              console.log('main_region onchange fetch response: ', data)
-              const subRegionElement = document.getElementById('sub_region')
-              subRegionElement.innerHTML = ''
-              const defaultOptionTag = document.createElement('option')
-              defaultOptionTag.textContent = 'Select'
-              subRegionElement.appendChild(defaultOptionTag)
-              data.data.forEach((item, idx) => {
-                  const optionElement = document.createElement('option')
-                  optionElement.value = idx
-                  optionElement.textContent = item
-                  subRegionElement.appendChild(optionElement)
-              });
-              if(g_sub_region_value > 0){
-                  document.getElementById('sub_region').value = g_sub_region_value;
-                  g_sub_region_value = 0;
-              }
-              })
-              .catch(error => console.error('Error:', error));
-      }
-
       /* ejs파라미터를 화면에 뿌려주는 코드 */
-      const stadium_data = <%- JSON.stringify(data) %>;
-      console.log('stadium_data: ', stadium_data);
-      
+      document.addEventListener("DOMContentLoaded", function() {
+      const user_data = <%- JSON.stringify(data) %>;
+      console.log('user_data: ', user_data);
+
       // data가 있을 때만 input들에 값 할당
-      if(stadium_data){
-        const keyArray = Object.keys(stadium_data);
-        keyArray.forEach(key => {
-          const input_object = document.getElementById(key);
-
-          // photo_path인 경우 value가 아니라 style로 사진경로 부여
-          if(input_object && key === 'photo_path') input_object.style = `background-image: url(${stadium_data[key]})`
-          
-          // 메인지역의 경우 설정했을 때 서브지역이 업데이트 되도록 onchange 발생시키기
-          else if(input_object && key === 'main_region') {
-            input_object.value = stadium_data[key];
-            var event = new Event('change', {
-              bubbles: true,    // 이벤트가 버블링되도록 설정
-              cancelable: true,  // 이벤트를 취소할 수 있도록 설정
-            });
-            g_sub_region_value = stadium_data['sub_region'];
-            input_object.dispatchEvent(event);
-          }
-
-          // getElementById로 검색되는 일반적인 input에 값 대입
-          else if(input_object) input_object.value = stadium_data[key];
-
-          // id값을 hidden input에 할당
-          else if (!input_object && key === 'id') document.getElementById('stadium_id').value = stadium_data[key];
-
-          // radio 버튼인 경우
-          else if(!input_object){
-            const radio_list = document.getElementsByName(key)
-            if(radio_list.length > 0){
-              radio_list.forEach(element => {
-                if(element.value == stadium_data[key]) element.checked = true
-              })
-            }
-          }
-        })
+      if(Object.keys(user_data).length > 0){
+        document.getElementById('user_id').value = user_data.id;
+        document.getElementById('username').value = user_data.username;
+        document.getElementById('birth_date').value = user_data.birth_date;
+        document.getElementById('email').value = user_data.email;
+        document.getElementById('phone_number').value = user_data.phone_number;
+        document.getElementById('status_code').value = user_data.status_code;
+        document.getElementById('level_code').value = user_data.level_code;
+        
+        const radio_list = document.getElementsByName("gender");
+        if(radio_list.length > 0){
+          radio_list.forEach(element => {
+            if(element.value == user_data["gender"]) element.checked = true
+          })
+        }
       }
 
       /* form submit 등록/수정 분기 처리 */
@@ -1274,7 +1005,7 @@
 
         const form = event.target;
         const formData = new FormData(form);
-        formData.append('requestTable', 'stadium');
+        formData.append('requestTable', 'user');
         // FormData의 내용을 로깅
         for (let [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
@@ -1282,15 +1013,14 @@
 
         let target_url = "";
 
-        // stadium_id 유무에 따라 url을 등록/수정 분기하여 요청청
-        const stadium_id = document.getElementById('stadium_id').value;
-        if(stadium_id){
-          target_url = `http://127.0.0.1:7070/stadium/edit/${stadium_id}`
+        // user_id 유무에 따라 url을 등록/수정 분기하여 요청
+        const user_id = document.getElementById('user_id').value;
+        if(user_id){
+          target_url = `http://127.0.0.1:7070/user/edit/${user_id}`
         }else{
-          target_url = `http://127.0.0.1:7070/stadium/regist`
+          target_url = `http://127.0.0.1:7070/user/regist`
         }
         console.log('target_url: ', target_url)
-
         fetch(target_url, {
             method: 'POST',
             body: formData
@@ -1305,6 +1035,8 @@
         })
         .catch(error => console.error('Error:', error));
       });
+    });
+    
     </script>
   </body>
   <!--end::Body-->
