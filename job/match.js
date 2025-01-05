@@ -105,6 +105,36 @@ export async function scheduleMatchCheck() {
     }
   });
 
+  /* 매치 삭제 스케줄러 (하루마다 실행) */
+  schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
+    console.log("매 시간마다 7일 범위 매치 삭제 스케줄 작업 실행...");
+  
+    try {
+      const now = getKoreanTime(); // KST 시간 변환
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // 오늘 자정
+      const sevenDaysLater = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 후 자정
+  
+      const formattedStart = startOfToday.toISOString().slice(0, 19).replace("T", " ");
+      const formattedEnd = sevenDaysLater.toISOString().slice(0, 19).replace("T", " ");
+  
+      console.log(`삭제 대상 기간: ${formattedStart} ~ ${formattedEnd}`);
+  
+      // SQL DELETE 쿼리 실행
+      const query = `
+        DELETE FROM PFB_MATCH
+        WHERE manager_id IS NULL
+          AND match_start_time >= ?
+          AND match_start_time < ?
+      `;
+  
+      const [result] = await db.execute(query, [formattedStart, formattedEnd]);
+  
+      console.log(`삭제 완료: ${result.affectedRows}개의 매치가 삭제되었습니다.`);
+    } catch (error) {
+      console.error("7일 범위 매치 삭제 작업 중 오류 발생:", error.message);
+    }
+  });
+
   /* 매일 새벽 3시 구동 (구장 설정대로 매치를 생성하는 job) */
   schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
     console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job 동작!')
