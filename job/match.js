@@ -48,9 +48,9 @@ async function updateMatchStatusAndExecuteUpdate(query, params, statusCode, logM
 export async function scheduleMatchCheck() {
   console.log("스케줄 작업이 시작되었습니다.");
 
-  // 매 1분마다 실행
+  /* 매치 상태 업데이트 Job (1시간마다) */
   schedule.scheduleJob(config.scheduler.match_status_change_cron, async () => {
-    console.log("매 1분마다 스케줄 작업 실행...");
+    console.log("매 시간마다 스케줄 작업 실행...");
 
     try {
       const now = getKoreanTime(); // 한국 시간
@@ -106,9 +106,6 @@ export async function scheduleMatchCheck() {
   });
 
   /* 매일 새벽 3시 구동 (구장 설정대로 매치를 생성하는 job) */
-  // '0 2 * * *' 매일 새벽 2시마다
-  // '0 2 * * 1' 매주 월요일 새벽 2시마다
-  // '*/5 * * * *' 매 5분마다 (테스트용)
   schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
     console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job 동작!')
     const connection = await db.getConnection();  // 커넥션 획득
@@ -185,43 +182,19 @@ export async function scheduleMatchCheck() {
   })
 }
 
-function createUTCDateFromString(dateString) {
-  // 날짜와 시간을 분리 ("2025-01-04 00:00" -> ["2025-01-04", "00:00"])
-  const [datePart, timePart] = dateString.split(' ');
-
-  // 날짜 부분을 더 분리 ("2025-01-04" -> ["2025", "01", "04"])
-  const [year, month, day] = datePart.split('-').map(Number);
-
-  // 시간 부분을 더 분리 ("00:00" -> ["00", "00"])
-  const [hours, minutes] = timePart.split(':').map(Number);
-
-  // Date.UTC를 사용하여 Date 객체 반환
-  return new Date(Date.UTC(year, month - 1, day, hours, minutes));
-}
-
-// 시간과 분을 지키면서 num만큼 일자를 미루는 함수
+/** DB에서 받은 datetime string을 30일 뒤 UTC시간으로 리턴 */
 function getAddedDate(num, dateString) {
+  console.log('num: ', num, ' dateString: ', dateString);
   
-  // num만큼 날짜 더하기
-  const dateTime = createUTCDateFromString(dateString);
-  console.error('job / match.js / getAddedDate(num, dateString) createUTCDateFromString(dateString) 반환값 : ', dateTime);
-  dateTime.setDate(dateTime.getDate() + num);
+  // DB에서 받아온 날짜 string값에서 '시', '분'만 뽑는다
+  let [hour, minute] = dateString.split(' ')[1].split(':').map(item => parseInt(item, 10));
+  console.log('hour = ', hour, ' minute = ', minute);
 
-  // 결과를 'YYYY-MM-DD HH:mm:ss' 형식으로 포맷
-  const year = dateTime.getUTCFullYear(); // UTC 연도
-  const month = dateTime.getUTCMonth() + 1; // UTC 월 (0부터 시작하므로 1을 더함)
-  const day = dateTime.getUTCDate(); // UTC 일
-  const hours = dateTime.getUTCHours(); // UTC 시
-  const minutes = dateTime.getUTCMinutes(); // UTC 분
-  const seconds = dateTime.getUTCSeconds(); // UTC 초
-
-  // 각 구성 요소를 두 자리로 맞추기 위해 문자열 형식 조정
-  const formattedMonth = month < 10 ? '0' + month : month;
-  const formattedDay = day < 10 ? '0' + day : day;
-  const formattedHours = hours < 10 ? '0' + hours : hours;
-  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-  const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
-
-  // 최종 문자열 생성
-  return `${year}-${formattedMonth}-${formattedDay} ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  // 현재시간 now를 UTC시간으로 환산 후 '연', '월', '일' 획득
+  let [year, month, day] = new Date().toISOString().split('T')[0].split('-').map(item => parseInt(item, 10));
+  month -= 1;
+  console.log('year = ', year, ' month = ', month, ' day = ', day);
+  let timestamp = Date.UTC(year, month, day, hour, minute);
+  timestamp += num*24*60*60*1000;
+  return new Date(timestamp).toISOString().split('.')[0].replace('T', ' ');
 }

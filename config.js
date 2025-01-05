@@ -4,7 +4,7 @@ dotenv.config();
 
 function getEnvValueConvertUnderbar(key){
   let value = process.env[key];
-  value.replace(/_/g, ' ')
+  return value.replace(/_/g, ' ');
 }
 
 function getEnvValue(key) {
