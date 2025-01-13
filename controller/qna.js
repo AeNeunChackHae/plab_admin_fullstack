@@ -2,7 +2,7 @@ import express from "express";
 import { config } from "../config.js";
 import * as qnaRepository from '../data/qna.js';
 
-/* QnA 리스트 페이지 */
+/* 답변완료 QnA 리스트 페이지 */
 export async function qnaList(req, res, next) {
   const data_object = {
     page_title:"QnA",
@@ -20,7 +20,35 @@ export async function qnaList(req, res, next) {
       ]
   }
 
-  const objectList = await qnaRepository.getAllValidUser();
+  const objectList = await qnaRepository.getCompleteValidUser();
+  if(objectList){
+    data_object.objectList = objectList;
+  } else {
+    data_object.objectList = {};
+  }
+  
+  res.render("list_page", data_object);
+}
+
+/* 미답변 QnA 리스트 페이지 */
+export async function waitQnaList(req, res, next) {
+  const data_object = {
+    page_title:"QnA",
+    sub_title:'QnA 목록',
+    regist_url:"/qna/regist",
+    edit_url:"/qna/edit/",
+    regist_visible:false,
+    filter_column: "title",
+    tabulator_config:[
+        {title:'id', field:'id', visible:false},
+        {title:'사용자명', field:'username'},
+        {title:'문의 제목', field:'title'},
+        {title:'내용', field:"content"},
+        {title:'일시', field:"created_at"},
+      ]
+  }
+
+  const objectList = await qnaRepository.getWaitValidUser();
   if(objectList){
     data_object.objectList = objectList;
   } else {
