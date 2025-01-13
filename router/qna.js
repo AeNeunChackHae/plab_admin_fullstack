@@ -6,8 +6,11 @@ const upload = multer();
 
 const router = express.Router();
 
-// qna 페이지
+// qna 답변 완료 페이지
 router.get("/", qnaController.qnaList);
+
+// qna 미답변 페이지
+router.get("/wait", qnaController.waitQnaList);
 
 // qna 수정 페이지
 router.get("/edit/:id", qnaController.editPage);
