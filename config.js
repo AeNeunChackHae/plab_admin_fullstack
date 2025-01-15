@@ -123,6 +123,7 @@ export const config = {
     saltRounds: parseInt(getEnvValue("BCRYPT_SALT_ROUNDS")),
   },
   hosting_port: {
+    host_ip: getEnvValue('HOST_IP'),
     admin_full: parseInt(getEnvValue("ADMIN_FULL")),
     user_front: parseInt(getEnvValue("USER_FRONT")),
     user_back: parseInt(getEnvValue("USER_BACK")),
@@ -140,5 +141,13 @@ export const config = {
     match_status_change_cron:getEnvValueConvertUnderbar('MATCH_STATUS_CHANGE_CRON'),
     match_regist_cron:getEnvValueConvertUnderbar('MATCH_REGIST_CRON'),
     match_regist_delay_date:getEnvValue("MATCH_REGIST_DELAY_DATE"),
+  },
+  nodemailer: {
+    email: getEnvValue("MANAGER_EMAIL_ACCOUNT"),
+    password: getEnvValue("MANAGER_EMAIL_PASSWORD"),
+  },
+  iamport:{
+    api_key: getEnvValue("IAMPORT_API_KEY"), // 아임포트 API 키
+    api_secret: getEnvValue("IAMPORT_API_SECRET"), // 아임포트 시크릿 키
   }
 };

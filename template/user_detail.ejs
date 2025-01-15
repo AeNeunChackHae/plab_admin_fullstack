@@ -1016,9 +1016,9 @@
         // user_id 유무에 따라 url을 등록/수정 분기하여 요청
         const user_id = document.getElementById('user_id').value;
         if(user_id){
-          target_url = `http://127.0.0.1:7070/user/edit/${user_id}`
+          target_url = `/user/edit/${user_id}`
         }else{
-          target_url = `http://127.0.0.1:7070/user/regist`
+          target_url = `/user/regist`
         }
         console.log('target_url: ', target_url)
         fetch(target_url, {

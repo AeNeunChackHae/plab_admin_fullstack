@@ -950,7 +950,7 @@
 
         // manager_id 유무에 따라 url을 등록/수정 분기하여 요청
         const manager_id = document.getElementById('manager_id').value;
-        target_url = `http://127.0.0.1:7070/manager/edit`;
+        target_url = `/manager/edit`;
         console.log('target_url: ', target_url)
 
         fetch(target_url, {
