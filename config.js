@@ -123,6 +123,7 @@ export const config = {
     saltRounds: parseInt(getEnvValue("BCRYPT_SALT_ROUNDS")),
   },
   hosting_port: {
+    host_ip: getEnvValue('HOST_IP'),
     admin_full: parseInt(getEnvValue("ADMIN_FULL")),
     user_front: parseInt(getEnvValue("USER_FRONT")),
     user_back: parseInt(getEnvValue("USER_BACK")),
