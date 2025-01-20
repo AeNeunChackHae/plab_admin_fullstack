@@ -1,8 +1,9 @@
 import { db } from "../mysql.js";
 import schedule from "node-schedule";
 import { config } from "../config.js";
+import { sendEmail } from "../utils/email.js";
 
-// 이메일로  실행 오류시 알려주는 로직 필요!!!
+// 이메일로 실행 오류시 알려주는 로직 필요!!!
 
 // 현재 시간을 KST(한국 시간)으로 변환
 function getKoreanTime() {
@@ -13,34 +14,62 @@ function getKoreanTime() {
 }
 
 // 특정 조건으로 PFB_MATCH 업데이트
-async function updateMatchStatusAndExecuteUpdate(query, params, statusCode, logMessage) {
-  console.log(`Executing query: ${query}`);
-  console.log(`With params: ${JSON.stringify(params)}`);
+async function executeWithRetries(query, params, logMessage) {
+  let attempt = 0;
+  const maxAttempts = 3;
 
-  try {
-    const [matches] = await db.execute(query, params);
-    console.log(`Query result: ${JSON.stringify(matches)}`);
+  while (attempt < maxAttempts) {
+    try {
+      console.log(`[재시도 ${attempt + 1}/${maxAttempts}] 실행 중: ${logMessage}`);
+      const [result] = await db.execute(query, params);
+      console.log(`${logMessage} 성공: ${JSON.stringify(result)}`);
+      return result; // 성공 시 반환
 
-    if (matches.length > 0) {
-      const matchIds = matches.map((match) => match.id);
-      console.log(`Match IDs to update: ${matchIds}`);
+    } catch (error) {
+      attempt++;
+      console.error(`[실패 ${attempt}/${maxAttempts}] ${logMessage} 오류 발생: ${error.message}`);
 
-      if (matchIds.length > 0) {
-        const [updateResult] = await db.execute(
-          `UPDATE PFB_MATCH
-           SET status_code = ?
-           WHERE id IN (${matchIds.join(",")})`, // 배열을 쉼표로 구분된 문자열로 변환
-          [statusCode]
-        );
-        console.log(`Update result: ${JSON.stringify(updateResult)}`);
-        console.log(`${logMessage}: ${matchIds.join(", ")}`);
+      if (attempt < maxAttempts) {
+        const delay = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000;
+        console.log(`${delay / 1000}초 후 재시도합니다...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        console.error(`최대 재시도 초과 - 관리자에게 이메일 전송`);
+
+        const errorMessage = `${logMessage} 실패: ${error.message}\nStack Trace:\n${error.stack}`;
+        sendEmail({
+          to: config.admin_account.email,
+          subject: `[시스템 오류 발생] ${logMessage} 실패`,
+          text: errorMessage,
+        }).catch(mailError => {
+          console.error("관리자 이메일 전송 실패:", mailError);
+        });
+
+        throw error;
       }
-    } else {
-      console.log(`${logMessage}: 조건에 맞는 매치가 없습니다.`);
     }
-  } catch (error) {
-    console.error(`Error during updateMatchStatusAndExecuteUpdate: ${error.message}`);
-    throw error;
+  }
+}
+
+// 특정 조건으로 PFB_MATCH 업데이트
+async function updateMatchStatusAndExecuteUpdate(query, params, statusCode, logMessage) {
+  console.log(`실행 중: ${logMessage}`);
+  
+  const matches = await executeWithRetries(query, params, logMessage);
+
+  if (matches.length > 0) {
+    const matchIds = matches.map((match) => match.id);
+    console.log(`업데이트할 Match IDs: ${matchIds}`);
+
+    if (matchIds.length > 0) {
+      await executeWithRetries(
+        `UPDATE PFB_MATCH SET status_code = ? WHERE id IN (${matchIds.join(",")})`,
+        [statusCode],
+        `${logMessage} - 매치 상태 업데이트`
+      );
+    }
+  } else {
+    console.log(`${logMessage}: 조건에 맞는 매치가 없습니다.`);
   }
 }
 
@@ -50,31 +79,28 @@ export async function scheduleMatchCheck() {
 
   /* 매치 상태 업데이트 Job (1시간마다) */
   schedule.scheduleJob(config.scheduler.match_status_change_cron, async () => {
-    console.log("매 시간마다 스케줄 작업 실행...");
+    console.log("매 시간마다 매치 상태 업데이트 실행...");
 
     try {
-      const now = getKoreanTime(); // 한국 시간
+      const now = getKoreanTime();
       const formattedNow = now.toISOString().slice(0, 19).replace("T", " ");
-      const threeHoursBefore = new Date(now.getTime() - 3 * 60 * 60 * 1000); // 3시간 전
-      const formattedThreeHoursBefore = threeHoursBefore
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
+      const threeHoursBefore = new Date(now.getTime() - 3 * 60 * 60 * 1000);
+      const formattedThreeHoursBefore = threeHoursBefore.toISOString().slice(0, 19).replace("T", " ");
 
       console.log(`현재 시간(KST): ${formattedNow}, 3시간 전(KST): ${formattedThreeHoursBefore}`);
 
-      // 1. 3시간 전 매치에서 참가자 수 부족 매치 처리
+      // 1. 3시간 전 참가자 부족 매치 처리
       await updateMatchStatusAndExecuteUpdate(
         `SELECT m.id 
          FROM PFB_MATCH m
          LEFT JOIN PFB_MATCH_USER mu ON m.id = mu.match_id
          WHERE m.match_start_time = ?
-           AND m.status_code != 4  -- 4인 매치는 제외
+           AND m.status_code != 4
          GROUP BY m.id
          HAVING COUNT(mu.user_id) < 18`,
         [formattedThreeHoursBefore],
         4,
-        "3시간 전 유저 부족 매치 업데이트 완료"
+        "3시간 전 유저 부족 매치 업데이트"
       );
 
       // 2. 현재 시작 매치 처리
@@ -82,11 +108,11 @@ export async function scheduleMatchCheck() {
         `SELECT id 
          FROM PFB_MATCH 
          WHERE match_start_time = ? 
-           AND status_code = 1  -- status_code가 1인 매치만
-           AND status_code != 4`, // 4인 매치는 제외
+           AND status_code = 1
+           AND status_code != 4`,
         [formattedNow],
         2,
-        "현재 시작 매치 업데이트 완료 (status_code 1 → 2)"
+        "현재 시작 매치 업데이트"
       );
 
       // 3. 현재 종료 매치 처리
@@ -94,47 +120,46 @@ export async function scheduleMatchCheck() {
         `SELECT id 
          FROM PFB_MATCH 
          WHERE match_end_time = ? 
-           AND status_code IN (0, 1, 2)  -- status_code가 0, 1, 2인 매치만
-           AND status_code != 4`, // 4인 매치는 제외
+           AND status_code IN (0, 1, 2)
+           AND status_code != 4`,
         [formattedNow],
         3,
-        "현재 종료 매치 업데이트 완료 (status_code 0, 1, 2 → 3)"
+        "현재 종료 매치 업데이트"
       );
+
     } catch (error) {
-      console.error("스케줄 작업 중 오류 발생:", error);
+      console.error("매치 상태 업데이트 작업 중 오류 발생:", error);
     }
   });
 
   /* 매치 삭제 스케줄러 (하루마다 실행) */
   schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
     console.log("매 시간마다 7일 범위 매치 삭제 스케줄 작업 실행...");
-  
+
     try {
-      const now = getKoreanTime(); // KST 시간 변환
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // 오늘 자정
-      const sevenDaysLater = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 후 자정
-  
+      const now = getKoreanTime();
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const sevenDaysLater = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000);
+
       const formattedStart = startOfToday.toISOString().slice(0, 19).replace("T", " ");
       const formattedEnd = sevenDaysLater.toISOString().slice(0, 19).replace("T", " ");
-  
+
       console.log(`삭제 대상 기간: ${formattedStart} ~ ${formattedEnd}`);
-  
-      // SQL DELETE 쿼리 실행
-      const query = `
-        DELETE FROM PFB_MATCH
-        WHERE manager_id IS NULL
-          AND match_start_time >= ?
-          AND match_start_time < ?
-      `;
-  
-      const [result] = await db.execute(query, [formattedStart, formattedEnd]);
-  
-      console.log(`삭제 완료: ${result.affectedRows}개의 매치가 삭제되었습니다.`);
+
+      await executeWithRetries(
+        `DELETE FROM PFB_MATCH
+         WHERE manager_id IS NULL
+           AND match_start_time >= ?
+           AND match_start_time < ?`,
+        [formattedStart, formattedEnd],
+        "7일 범위 매치 삭제"
+      );
+
     } catch (error) {
       console.error("7일 범위 매치 삭제 작업 중 오류 발생:", error.message);
     }
   });
-
+}
   /* 매일 새벽 3시 구동 (구장 설정대로 매치를 생성하는 job) */
   schedule.scheduleJob(config.scheduler.match_regist_cron, async () => {
     console.log('job / match.js / scheduleMatchCheck() / 매치 생성 job 동작!')
@@ -210,7 +235,7 @@ export async function scheduleMatchCheck() {
       connection.release(); // 커넥션 반환
     }
   })
-}
+
 
 /** DB에서 받은 datetime string을 30일 뒤 UTC시간으로 리턴 */
 function getAddedDate(num, dateString) {
