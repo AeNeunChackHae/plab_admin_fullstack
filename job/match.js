@@ -54,19 +54,20 @@ async function executeWithRetries(query, params, logMessage) {
 // 특정 조건으로 PFB_MATCH 업데이트
 async function updateMatchStatusAndExecuteUpdate(query, params, statusCode, logMessage) {
   console.log(`실행 중: ${logMessage}`);
-  
+
   const matches = await executeWithRetries(query, params, logMessage);
+  console.log(`${logMessage} 조회 결과:`, matches); // 조회된 데이터 직접 출력
 
   if (matches.length > 0) {
     const matchIds = matches.map((match) => match.id);
     console.log(`업데이트할 Match IDs: ${matchIds}`);
 
     if (matchIds.length > 0) {
-      await executeWithRetries(
-        `UPDATE PFB_MATCH SET status_code = ? WHERE id IN (${matchIds.join(",")})`,
-        [statusCode],
-        `${logMessage} - 매치 상태 업데이트`
-      );
+      const updateQuery = `UPDATE PFB_MATCH SET status_code = ? WHERE id IN (${matchIds.map(() => "?").join(",")})`;
+      const updateParams = [statusCode, ...matchIds];
+
+      const result = await executeWithRetries(updateQuery, updateParams, `${logMessage} - 매치 상태 업데이트`);
+      console.log(`${logMessage} - 업데이트된 행 수: ${result.affectedRows}`);
     }
   } else {
     console.log(`${logMessage}: 조건에 맞는 매치가 없습니다.`);
@@ -90,43 +91,52 @@ export async function scheduleMatchCheck() {
       console.log(`현재 시간(KST): ${formattedNow}, 3시간 전(KST): ${formattedThreeHoursBefore}`);
 
       // 1. 3시간 전 참가자 부족 매치 처리
+      console.log("⚡ [STEP 1] 3시간 전 유저 부족 매치 업데이트 시작");
       await updateMatchStatusAndExecuteUpdate(
         `SELECT m.id 
          FROM PFB_MATCH m
          LEFT JOIN PFB_MATCH_USER mu ON m.id = mu.match_id
-         WHERE m.match_start_time = ?
-           AND m.status_code != 4
+         WHERE m.match_start_time BETWEEN ? AND ?  
+           AND m.status_code = 0
          GROUP BY m.id
          HAVING COUNT(mu.user_id) < 18`,
-        [formattedThreeHoursBefore],
+        [formattedThreeHoursBefore, formattedNow],
         4,
         "3시간 전 유저 부족 매치 업데이트"
       );
+      console.log('1번째의 formattedThreeHoursBefore',formattedThreeHoursBefore);
+      console.log("✅ [STEP 1] 3시간 전 유저 부족 매치 업데이트 완료");
 
       // 2. 현재 시작 매치 처리
+      console.log("⚡ [STEP 2] 현재 시작 매치 업데이트 시작");
       await updateMatchStatusAndExecuteUpdate(
         `SELECT id 
          FROM PFB_MATCH 
-         WHERE match_start_time = ? 
-           AND status_code = 1
-           AND status_code != 4`,
+         WHERE ? BETWEEN match_start_time AND match_end_time 
+           AND status_code = 1`,
         [formattedNow],
         2,
         "현재 시작 매치 업데이트"
       );
+      console.log("2번째의 formattedNow",formattedNow);
+      console.log("✅ [STEP 2] 현재 시작 매치 업데이트 완료");
 
       // 3. 현재 종료 매치 처리
+      console.log("⚡ [STEP 3] 현재 종료 매치 업데이트 시작");
       await updateMatchStatusAndExecuteUpdate(
         `SELECT id 
          FROM PFB_MATCH 
-         WHERE match_end_time = ? 
-           AND status_code IN (0, 1, 2)
-           AND status_code != 4`,
+         WHERE match_end_time < ?
+           AND status_code IN (0, 1, 2)`,
         [formattedNow],
         3,
         "현재 종료 매치 업데이트"
       );
 
+      console.log("3번째째의 formattedNow",formattedNow);
+      console.log("✅ [STEP 3] 현재 종료 매치 업데이트 완료");
+
+      console.log("✅ [매치 상태 업데이트] 전체 완료");
     } catch (error) {
       console.error("매치 상태 업데이트 작업 중 오류 발생:", error);
     }
