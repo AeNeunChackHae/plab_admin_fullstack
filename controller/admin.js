@@ -1,70 +1,72 @@
 import express from "express";
 import { config } from "../config.js";
-import * as adminRepository from '../data/admin.js';
+import * as adminRepository from "../data/admin.js";
 
 /* 관리자 리스트 페이지 */
 export async function adminList(req, res, next) {
   const data_object = {
-    page_title:"관리자",
-    sub_title:'관리자 목록',
-    regist_url:"/admin/regist",
-    edit_url:"/admin/edit/",
-    regist_visible:true,
+    page_title: "관리자",
+    sub_title: "관리자 목록",
+    regist_url: "/admin/regist",
+    edit_url: "/admin/edit/",
+    regist_visible: true,
     filter_column: "admin_name",
-    tabulator_config:[
-        {title:'id', field:'id', visible:false},
-        {title:'이름', field:'admin_name'},
-        {title:'계정', field:'email'},
-        {title:'일시', field:"created_at"},
-      ]
-  }
+    tabulator_config: [
+      { title: "id", field: "id", visible: false },
+      { title: "이름", field: "admin_name" },
+      { title: "계정", field: "email" },
+      { title: "일시", field: "created_at" },
+    ],
+    env_config: config,
+  };
 
   const objectList = await adminRepository.getAllValidUser();
-  if(objectList){
+  if (objectList) {
     data_object.objectList = objectList;
   } else {
     data_object.objectList = {};
   }
-  
+
   res.render("list_page", data_object);
 }
 
 /* 탈퇴 관리자 리스트 페이지 */
 export async function quitAdminList(req, res, next) {
-    const data_object = {
-        page_title:"관리자",
-        sub_title:'관리자 목록',
-        regist_url:"/admin/regist",
-        edit_url:"/admin/edit/",
-        regist_visible:false,
-        filter_column: "admin_name",
-        tabulator_config:[
-            {title:'id', field:'id', visible:false},
-            {title:'이름', field:'admin_name'},
-            {title:'계정', field:'email'},
-            {title:'일시', field:"created_at"},
-          ]
-      }
-  
-    const objectList = await adminRepository.getselectValidUser();
-    if(objectList){
-      data_object.objectList = objectList;
-    } else {
-      data_object.objectList = {};
-    }
-    
-    res.render("list_page", data_object);
+  const data_object = {
+    page_title: "관리자",
+    sub_title: "관리자 목록",
+    regist_url: "/admin/regist",
+    edit_url: "/admin/edit/",
+    regist_visible: false,
+    filter_column: "admin_name",
+    tabulator_config: [
+      { title: "id", field: "id", visible: false },
+      { title: "이름", field: "admin_name" },
+      { title: "계정", field: "email" },
+      { title: "일시", field: "created_at" },
+    ],
+    env_config: config,
+  };
+
+  const objectList = await adminRepository.getselectValidUser();
+  if (objectList) {
+    data_object.objectList = objectList;
+  } else {
+    data_object.objectList = {};
   }
 
+  res.render("list_page", data_object);
+}
 
 /* 관리자 등록 페이지 */
 export async function registPage(req, res, next) {
   const data_object = {
     page_title: "관리자",
-    sub_title: '관리자 등록',
-    data: {}
+    sub_title: "관리자 등록",
+    data: {},
+    env_config: config,
   };
-    res.render("admin_detail", data_object);
+  res.render("admin_detail", data_object);
 }
 
 /* 관리자 등록 로직 */
@@ -75,9 +77,9 @@ export async function create(req, res, next) {
   const updateResult = await adminRepository.insertAdmin(formData);
 
   if (updateResult) {
-    res.json({ status: true, url: '/admin' });
+    res.json({ status: true, url: "/admin" });
   } else {
-    res.json({ status: false, error: 'update query exception 발생' });
+    res.json({ status: false, error: "update query exception 발생" });
   }
 }
 
@@ -88,12 +90,13 @@ export async function editPage(req, res, next) {
 
   // 관리자 데이터가 없을 경우
   if (!admin_data) {
-    res.render('error', { error: '잘못된 접근입니다.' });
+    res.render("error", { error: "잘못된 접근입니다." });
   } else {
     const data_object = {
       page_title: "관리자",
-      sub_title: '관리자 수정',
-      data: admin_data
+      sub_title: "관리자 수정",
+      data: admin_data,
+      env_config: config,
     };
     res.render("admin_detail", data_object);
   }
@@ -107,8 +110,8 @@ export async function update(req, res, next) {
   const updateResult = await adminRepository.updateAdmin(formData);
 
   if (updateResult) {
-    res.json({ status: true, url: '/admin' });
+    res.json({ status: true, url: "/admin" });
   } else {
-    res.json({ status: false, error: 'update query exception 발생' });
+    res.json({ status: false, error: "update query exception 발생" });
   }
 }

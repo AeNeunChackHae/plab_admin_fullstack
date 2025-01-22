@@ -1,60 +1,62 @@
 import express from "express";
 import { config } from "../config.js";
-import * as qnaRepository from '../data/qna.js';
+import * as qnaRepository from "../data/qna.js";
 
 /* 답변완료 QnA 리스트 페이지 */
 export async function qnaList(req, res, next) {
   const data_object = {
-    page_title:"QnA",
-    sub_title:'QnA 목록',
-    regist_url:"/qna/regist",
-    edit_url:"/qna/edit/",
-    regist_visible:false,
+    page_title: "QnA",
+    sub_title: "QnA 목록",
+    regist_url: "/qna/regist",
+    edit_url: "/qna/edit/",
+    regist_visible: false,
     filter_column: "title",
-    tabulator_config:[
-        {title:'id', field:'id', visible:false},
-        {title:'사용자명', field:'username'},
-        {title:'문의 제목', field:'title'},
-        {title:'내용', field:"content"},
-        {title:'일시', field:"created_at"},
-      ]
-  }
+    tabulator_config: [
+      { title: "id", field: "id", visible: false },
+      { title: "사용자명", field: "username" },
+      { title: "문의 제목", field: "title" },
+      { title: "내용", field: "content" },
+      { title: "일시", field: "created_at" },
+    ],
+    env_config: config,
+  };
 
   const objectList = await qnaRepository.getCompleteValidUser();
-  if(objectList){
+  if (objectList) {
     data_object.objectList = objectList;
   } else {
     data_object.objectList = {};
   }
-  
+
   res.render("list_page", data_object);
 }
 
 /* 미답변 QnA 리스트 페이지 */
 export async function waitQnaList(req, res, next) {
   const data_object = {
-    page_title:"QnA",
-    sub_title:'QnA 목록',
-    regist_url:"/qna/regist",
-    edit_url:"/qna/edit/",
-    regist_visible:false,
+    page_title: "QnA",
+    sub_title: "QnA 목록",
+    regist_url: "/qna/regist",
+    edit_url: "/qna/edit/",
+    regist_visible: false,
     filter_column: "title",
-    tabulator_config:[
-        {title:'id', field:'id', visible:false},
-        {title:'사용자명', field:'username'},
-        {title:'문의 제목', field:'title'},
-        {title:'내용', field:"content"},
-        {title:'일시', field:"created_at"},
-      ]
-  }
+    tabulator_config: [
+      { title: "id", field: "id", visible: false },
+      { title: "사용자명", field: "username" },
+      { title: "문의 제목", field: "title" },
+      { title: "내용", field: "content" },
+      { title: "일시", field: "created_at" },
+    ],
+    env_config: config,
+  };
 
   const objectList = await qnaRepository.getWaitValidUser();
-  if(objectList){
+  if (objectList) {
     data_object.objectList = objectList;
   } else {
     data_object.objectList = {};
   }
-  
+
   res.render("list_page", data_object);
 }
 
@@ -65,12 +67,13 @@ export async function editPage(req, res, next) {
 
   // QnA 데이터가 없을 경우
   if (!qna_data) {
-    res.render('error', { error: '잘못된 접근입니다.' });
+    res.render("error", { error: "잘못된 접근입니다." });
   } else {
     const data_object = {
       page_title: "QnA",
-      sub_title: 'QnA 수정',
-      data: qna_data
+      sub_title: "QnA 수정",
+      data: qna_data,
+      env_config: config,
     };
     res.render("qna_detail", data_object);
   }
@@ -84,8 +87,8 @@ export async function update(req, res, next) {
   const updateResult = await qnaRepository.updateQna(formData);
 
   if (updateResult) {
-    res.json({ status: true, url: '/qna' });
+    res.json({ status: true, url: "/qna" });
   } else {
-    res.json({ status: false, error: 'update query exception 발생' });
+    res.json({ status: false, error: "update query exception 발생" });
   }
 }

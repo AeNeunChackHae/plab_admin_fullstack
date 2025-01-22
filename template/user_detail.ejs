@@ -54,6 +54,7 @@
     </style>
     <script src="./custom/login_shield.js"></script>
     <script defer src="./custom/role.js"></script>
+    <script src="../config.js"></script>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -977,7 +978,7 @@
       /* ejs파라미터를 화면에 뿌려주는 코드 */
       document.addEventListener("DOMContentLoaded", function() {
       const user_data = <%- JSON.stringify(data) %>;
-      console.log('user_data: ', user_data);
+      const env_config = <%- JSON.stringify(env_config) %>;
 
       // data가 있을 때만 input들에 값 할당
       if(Object.keys(user_data).length > 0){
@@ -1016,9 +1017,9 @@
         // user_id 유무에 따라 url을 등록/수정 분기하여 요청
         const user_id = document.getElementById('user_id').value;
         if(user_id){
-          target_url = `/user/edit/${user_id}`
+          target_url = `http://${env_config.hosting_port.host_ip}:${env_config.hosting_port.admin_full}/user/edit/${user_id}`
         }else{
-          target_url = `/user/regist`
+          target_url = `http://${env_config.hosting_port.host_ip}:${env_config.hosting_port.admin_full}/user/regist`
         }
         console.log('target_url: ', target_url)
         fetch(target_url, {

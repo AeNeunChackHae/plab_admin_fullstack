@@ -1138,15 +1138,12 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
       }else{
         btn_container.hidden = false;
       }
-      console.log(" btn_visible: ", btn_visible)
 
       const tableData = <%- JSON.stringify(objectList) %>;
-      console.log('tableData: ', tableData);
+      const env_config = <%- JSON.stringify(env_config) %>;
 
       const no_data_alert = document.getElementById("no_data_alert")
       const tabulator_container = document.getElementById("tabulator_container")
-      console.log("no_data_alert: ", no_data_alert)
-      console.log("tabulator_container: ", tabulator_container)
       
       // 빈 값
       if (!tableData || tableData.length <= 0) {
